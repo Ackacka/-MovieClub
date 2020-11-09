@@ -5,7 +5,7 @@
     <form method="post" action="index.php">
         <input type="hidden" name="action" value="userLogin">
 
-        <input type="text" name="username" value="<?php echo htmlspecialchars($username); ?>" placeholder="Enter Your User Name"/>  
+        <input type="text" name="username" value="<?php if($username !== 'defaultUser') echo htmlspecialchars($username); ?>" placeholder="Enter Your User Name"/>  
         <span style="color: red;"> <?php echo htmlspecialchars($usernameError) ?></span>
         <br>
         <input class="rounded" type="password" name="password" placeholder="Enter Your Password"/> 

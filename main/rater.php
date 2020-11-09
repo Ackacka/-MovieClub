@@ -1,20 +1,28 @@
 <?php include 'view/header.php'; ?>
-<?php //var_dump($movie); ?>
+<?php var_dump($movie); ?>
 <div class="row">
-    <div class="card m-10 mx-auto" style="width: 30rem;";>
+    <div class="card m-10 mx-auto" style="width: 40rem;";>
         <img class="card-img-top" src="https://image.tmdb.org/t/p/w500<?php echo $movie['poster_path']; ?>" alt="poster">
         <div class="card-body">
             <h5 class="card-title"><?php echo $movie['title']; ?></h5>
             <p><em>Released <?php echo date_format(date_create($movie['release_date']), 'M Y'); ?>
                 </em></p>
             <p class="card-text"><?php echo $movie['overview']; ?></p>
-            <p>Your rating: </p>
-            <?php for ($i = 0; $i < 10; $i++) {?>
-                <span class="fa fa-star <?php if ($rating >= $i + 1) echo 'starActive'; ?>"
-                      id="star<?php echo $i + 1; ?>"></span>
-            <?php } ?>
+            
+            <form method="post" action="index.php">
+                <input type="hidden" name="action" value="addRating">
+                <input type="hidden" name="movieID" value="<?php echo $movie['id'] ?>">
+
+                <select id="ddRating" name="rating">
+                    <?php for($i = 0; $i < 10; $i++) { ?>
+                        <option value="<?php echo $i + 1 ?>"><?php echo $i + 1 ?> stars</option>
+                    <?php } ?>
+                </select>
+                <br>
+                <input class="btn btn-outline-primary" type="submit" value="Submit">
+            </form>
                       
-            <a href="#" class="btn btn-secondary float-right">Haven't seen</a>
+            <a href="#" class="btn btn-outline-secondary">Haven't seen</a>
         </div>
     </div>
 </div>
