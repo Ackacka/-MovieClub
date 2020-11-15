@@ -1,13 +1,22 @@
 <?php
 
-
 class Rating {
-    private $ratingID, $userID, $tmdbID, $ratingDate, $rating;
-    
-    function __construct($userID, $tmdbID, $rating) {
+
+    private $ratingID, $userID, $tmdbID, $ratingDate, $rating, $movie;
+
+    function __construct($userID, $tmdbID, $rating, $movie) {
         $this->userID = $userID;
         $this->tmdbID = $tmdbID;
         $this->rating = $rating;
+        $this->movie = $movie;
+    }
+    
+    function getMovie() {
+        return $this->movie;
+    }
+
+    function setMovie($movie): void {
+        $this->movie = $movie;
     }
     
     function getRating() {
@@ -18,7 +27,7 @@ class Rating {
         $this->rating = $rating;
     }
 
-        function getRatingID() {
+    function getRatingID() {
         return $this->ratingID;
     }
 
@@ -48,8 +57,7 @@ class Rating {
 
     function setRatingDate($ratingDate): void {
         $this->ratingDate = $ratingDate;
-    }
-
-
+    } 
+    
 
 }

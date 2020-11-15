@@ -7,6 +7,8 @@ session_start();
 require_once './model/database.php';
 require_once './model/user.php';
 require_once './model/userDB.php';
+require_once './model/movie.php';
+require_once './model/movieDB.php';
 require_once './model/rating.php';
 require_once './model/ratingDB.php';
 require_once './model/validation.php';
@@ -23,7 +25,7 @@ $action = filter_input(INPUT_POST, "action");
 if ($action === null) {
     $action = filter_input(INPUT_GET, "action");
     if ($action === null) {
-        $action = "mainPage";
+        $action = "main";
     }
 }
 
@@ -38,32 +40,46 @@ $tmdbAuth = 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZTk5NmVlMzg4
 
 
 switch ($action) {
+    case "profile":
+        $ratings = RatingDB::getUserMovieRatings($user);
+        include './main/profile.php';
+        die();
+        break;
     case "addRating":
         $rating = filter_input(INPUT_POST, 'rating');
         $tmdbID = filter_input(INPUT_POST, 'movieID');
-        var_dump($user);
-        var_dump($tmdbID);
+        $title = filter_input(INPUT_POST, 'title');
+        $overview = filter_input(INPUT_POST, 'overview');
+        $poster = filter_input(INPUT_POST, 'poster');
         
-        $newRating = new Rating($user->getUserID(), $tmdbID, $rating);
-        var_dump($newRating);
+        $movie = new Movie($tmdbID, $title, $overview, $poster);
+        $newRating = new Rating($user->getUserID(), $tmdbID, $rating, $movie);
+        
+        
         RatingDB::addRating($newRating);
-        $ratings = RatingDB::getUserRatings($user);
-        
-        include './main/profile.php';
-        die();
-        break;      
-        
+        $ratings = RatingDB::getUserMovieRatings($user);   
+        //sequence matters for fall-through here
     case "rater":
         if (!isset($rating)) {
             $rating = 0;
         }
-        $movie = TmdbAPI::getRandomPopular();
+        
+        $userRatings = RatingDB::getUserMovieRatings($user);
+        $nonoIDs = array();
+        foreach ($userRatings as $rating){
+            array_push($nonoIDs, $rating->getTmdbID());
+        }
+        $movie = array();
+        do {
+            $movie = TmdbAPI::getRandomPopular();
+        } while (in_array($movie['id'], $nonoIDs));
+        
         include './main/rater.php';
         die();
         break;
-    case "mainPage":
+    case "main":
 
-        
+        $movies = TmdbAPI::getTopPopular(10);
         include './main/main.php';
         die();
         break;

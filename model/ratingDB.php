@@ -1,6 +1,6 @@
 <?php
 
-class ratingDB {
+class RatingDB {
 
     public static function getRatingByID($ratingID) {
         $db = Database::getDB();
@@ -23,8 +23,31 @@ class ratingDB {
 
         $userID = $rating->getUserID();
         $tmdbID = $rating->getTmdbID();
-        $rating = $rating->getRating();
+        $newRating = $rating->getRating();
+        $movie = $rating->getMovie();
 
+        //if a movie with this tmdb hasn't been entered into the database yet,
+        //then enter it
+        if(MovieDB::getMovie($tmdbID) === false) {
+            try{
+                $query = 'INSERT INTO movies
+                          (tmdbID, title, overview, poster)
+                            VALUES
+                          (:tmdbID, :title, :overview, :poster)';
+                $statement = $db->prepare($query);                
+                $statement->bindValue(':tmdbID', $tmdbID);
+                $statement->bindValue(':title', $movie->getTitle());
+                $statement->bindValue(':overview', $movie->getOverview());
+                $statement->bindValue(':poster', $movie->getPoster());
+                $statement->execute();
+                $statement->closeCursor();
+            } catch (Exception $ex) {
+                $error_message = $e->getMessage();
+                include("index.php");
+                exit();
+            }
+        }
+        
         try {
             $query = 'INSERT INTO ratings
                 (userID, tmdbID, rating)
@@ -33,7 +56,7 @@ class ratingDB {
             $statement = $db->prepare($query);
             $statement->bindValue(':userID', $userID);
             $statement->bindValue(':tmdbID', $tmdbID);
-            $statement->bindValue(':rating', $rating);
+            $statement->bindValue(':rating', $newRating);
             $statement->execute();
             $statement->closeCursor();
         } catch (PDOException $e) {
@@ -43,9 +66,10 @@ class ratingDB {
         }
     }
     
-    public static function getUserRatings($user){
+    public static function getUserMovieRatings($user){
         $db = Database::getDB();
-        $query = 'SELECT * FROM ratings
+        $query = 'SELECT * FROM ratings r
+                  INNER JOIN movies m ON r.tmdbID = m.tmdbID
                   WHERE userID = :userID';
         $statement = $db->prepare($query);
         $statement->bindValue(":userID", $user->getUserID());
@@ -55,7 +79,8 @@ class ratingDB {
         
         $ratings = null;
         foreach ($rows as $row){
-            $rating = new Rating($row['userID'], $row['tmdbID'], $row['rating']);
+            $movie = new  Movie($row['tmdbID'], $row['title'], $row['overview'], $row['poster']);
+            $rating = new Rating($row['userID'], $row['tmdbID'], $row['rating'], $movie);
             $rating->setRatingID($row['ratingID']);
             $rating->setRatingDate($row['ratingDate']);
             
