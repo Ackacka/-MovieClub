@@ -2,6 +2,72 @@
 
 class FriendshipDB {
 
+    public static function getPendingRequests($user) {
+        $db = Database::getDB();
+        $query = "SELECT * FROM userrelationships
+                  WHERE (userFirstID = :userID
+                  AND type = 'pending1')
+                  OR (userSecondID = :userID
+                  AND type = 'pending2')";
+        $statement = $db->prepare($query);
+        $statement->bindValue(":userID", $user->getUserID(), PDO::PARAM_INT);
+        $statement->execute();
+        $rows = $statement->fetchAll();
+        $statement->closeCursor();
+        $requestIDs = array();
+        //for every relationship row, determine which id is the request sender id,
+        //and add it to the array of request sender ids
+        for ($i = 0; $i < count($rows); $i++) {
+            if ($user->getUserID() === $rows[$i]['userFirstID']) {
+                array_push($requestIDs, $rows[$i]['userSecondID']);
+            } else {
+                array_push($requestIDs, $rows[$i]['userFirstID']);
+            }
+        }
+        return $requestIDs;
+    }
+
+    public static function acceptFriendRequest($userFrom, $userTo) {
+        $friends = self::userSort($userFrom, $userTo);
+
+        try {
+            $db = Database::getDB();
+            $query = "UPDATE userrelationships
+                    SET type = 'friends'
+                    WHERE userFirstID = :user1
+                    AND userSecondID = :user2";
+            $statement = $db->prepare($query);
+            $statement->bindValue(":user1", $friends[0]->getUserID());
+            $statement->bindValue(":user2", $friends[1]->getUserID());
+            $statement->execute();
+            $statement->closeCursor();
+        } catch (PDOException $ex) {
+            $error_message = $e->getMessage();
+            include("index.php");
+            exit();
+        }
+    }
+    
+    public static function declineFriendRequest($userFrom, $userTo) {
+        $friends = self::userSort($userFrom, $userTo);
+
+        try {
+            $db = Database::getDB();
+            $query = "DELETE FROM userrelationships
+                    WHERE userFirstID = :user1
+                    AND userSecondID = :user2";
+            $statement = $db->prepare($query);
+            $statement->bindValue(":user1", $friends[0]->getUserID());
+            $statement->bindValue(":user2", $friends[1]->getUserID());
+            $statement->execute();
+            $statement->closeCursor();
+        } catch (PDOException $ex) {
+            $error_message = $e->getMessage();
+            include("index.php");
+            exit();
+        }
+    }
+
     public static function sendFriendRequest($userFrom, $userTo) {
         $friends = self::userSort($userFrom, $userTo);
 
@@ -53,9 +119,11 @@ class FriendshipDB {
     private static function checkFriendship($friends) {
         $db = Database::getDB();
         $query = 'SELECT * FROM userrelationships
-                WHERE userFirstID = :friendship';
+                WHERE userFirstID = :friendship1
+                AND userSecondID = :friendship2';
         $statement = $db->prepare($query);
-        $statement->bindValue(":friendship", $friends[0]->getUserID());
+        $statement->bindValue(':friendship1', $friends[0]->getUserID());
+        $statement->bindValue(':friendship2', $friends[1]->getUserID());
         $statement->execute();
         $results = $statement->fetchAll();
         return $results;

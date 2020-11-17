@@ -2,7 +2,7 @@
 
 <div class="container">
     <div class="row">
-        <h3>Search for a freind's username</h3>
+        <h3>Search for a friend's username</h3>
     </div>
     <form method="post" action="index.php">
         <input type="hidden" name="action" value="searchUsers">

@@ -7,7 +7,7 @@
 <h4><?php echo "Thank you " . $user->getUsername() . ".<br>" . "You have been registered." ?></h4>
 <br>
 
-<p><a href="index.php?action=mainPage">Back to the home page</a></p>   
+<p><a href="index.php?action=main">Back to the home page</a></p>   
 
 
 <?php include 'view/footer.php'; ?>

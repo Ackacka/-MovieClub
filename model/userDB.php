@@ -40,8 +40,7 @@ class UserDB {
         $statement->bindValue(":userID", $userID);
         $statement->execute();
         $row = $statement->fetch();
-        $statement->closeCursor();
-        
+        $statement->closeCursor();        
         $user = new User($row['email'], $row['username'], '');
         $user->setUserID($row['userID']);
         return $user;

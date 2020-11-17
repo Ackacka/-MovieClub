@@ -16,6 +16,7 @@ require_once './model/tmdbapi.php';
 require_once './model/genre.php';
 require_once './model/genreDB.php';
 require_once './model/friendshipDB.php';
+require_once './middle/contHelper.php';
 
 
 if (empty($_SESSION['loginUser'])) {
@@ -44,6 +45,27 @@ $tmdbAuth = 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZTk5NmVlMzg4
 
 
 switch ($action) {
+    case "friendDecline":
+        $userIDFrom = filter_input(INPUT_POST, 'userIDfromDec');
+        $userFrom = UserDB::getUser($userIDFrom);
+        FriendshipDB::declineFriendRequest($userFrom, $user);
+        $requestingUsers = ContHelper::getRequestingUsers($user);
+        include './user/dashboard.php';
+        die();
+        break;
+    case "friendAccept":
+        $userIDFrom = filter_input(INPUT_POST, 'userIDfromAcc');        
+        $userFrom = UserDB::getUser($userIDFrom);
+        FriendshipDB::acceptFriendRequest($userFrom, $user);
+        $requestingUsers = ContHelper::getRequestingUsers($user);
+        include './user/dashboard.php';
+        die();
+        break;
+    case "dashboard":
+        $requestingUsers = ContHelper::getRequestingUsers($user);
+        include './user/dashboard.php';
+        die();
+        break;
     case "friendInvite":
         $userIDto = filter_input(INPUT_POST, 'userIDto');
         $userTo = UserDB::getUser($userIDto);
@@ -59,7 +81,7 @@ switch ($action) {
     case "searchUsersPage":
         if(!isset($results)) $results = array();
         if(!isset($search)) $search = "";
-        include './main/userSearch.php';
+        include './user/userSearch.php';
         die();
         break;
     case "search":
@@ -76,7 +98,7 @@ switch ($action) {
         break;
     case "myRatingsPage":
         $ratings = RatingDB::getUserMovieRatings($user);
-        include './main/myRatingsPage.php';
+        include './user/myRatingsPage.php';
         die();
         break;
     case "addRating":
@@ -132,7 +154,7 @@ switch ($action) {
             $movie = TmdbAPI::getRandomPopular();
         } while (in_array($movie['id'], $nonoIDs));
 
-        include './main/rater.php';
+        include './user/rater.php';
         die();
         break;
     case "main":
