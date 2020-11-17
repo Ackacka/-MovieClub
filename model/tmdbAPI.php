@@ -36,6 +36,7 @@ class TmdbAPI {
 
         $response = curl_exec($ch);
         $dResponse = json_decode($response, true);
+//        var_dump($dResponse);
         $movies = $dResponse['results'];
 
         curl_close($ch);

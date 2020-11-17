@@ -36,6 +36,8 @@ class MovieDB {
     }
 
     public static function addMovie($movie) {
+        $db = Database::getDB();
+        $genres = $movie->getGenres();
         try {
             $query = 'INSERT INTO movies
                           (tmdbID, title, overview, poster)
@@ -60,12 +62,12 @@ class MovieDB {
                             VALUES
                           (:tmdbID, :genreID)';
                 $statement = $db->prepare($query);
-                $statement->bindValue(':tmdbID', $tmdbID);
+                $statement->bindValue(':tmdbID', $movie->getTmdbID());
                 $statement->bindValue(':genreID', $genres[$i]->getGenreID());
                 $statement->execute();
                 $statement->closeCursor();
             } catch (Exception $ex) {
-                $error_message = $e->getMessage();
+                $error_message = $ex->getMessage();
                 include("index.php");
                 exit();
             }

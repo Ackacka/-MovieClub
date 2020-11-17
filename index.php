@@ -15,6 +15,7 @@ require_once './model/validation.php';
 require_once './model/tmdbapi.php';
 require_once './model/genre.php';
 require_once './model/genreDB.php';
+require_once './model/friendshipDB.php';
 
 
 if (empty($_SESSION['loginUser'])) {
@@ -43,8 +44,21 @@ $tmdbAuth = 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZTk5NmVlMzg4
 
 
 switch ($action) {
+    case "friendInvite":
+        $userIDto = filter_input(INPUT_POST, 'userIDto');
+        $userTo = UserDB::getUser($userIDto);
+        FriendshipDB::sendFriendRequest($user, $userTo);
+        include './main/requestConfirmation.php';
+        die();
+        break;        
+    case "searchUsers":
+        $search = filter_input(INPUT_POST, 'usernameSearch');
+        $search = htmlspecialchars($search);
+        if($search !== "") $results = UserDB::search($search);
+        //case order matters here
     case "searchUsersPage":
-        
+        if(!isset($results)) $results = array();
+        if(!isset($search)) $search = "";
         include './main/userSearch.php';
         die();
         break;
@@ -60,10 +74,9 @@ switch ($action) {
         include './main/movie.php';
         die();
         break;
-    case "profile":
+    case "myRatingsPage":
         $ratings = RatingDB::getUserMovieRatings($user);
-        
-        include './main/profile.php';
+        include './main/myRatingsPage.php';
         die();
         break;
     case "addRating":
@@ -74,11 +87,11 @@ switch ($action) {
         $overview = filter_input(INPUT_POST, 'overview');
         $poster = filter_input(INPUT_POST, 'poster');
         $genreIDs = array();
-        for($i = 0; $i < $genreCounter; $i++){
+        for ($i = 0; $i < $genreCounter; $i++) {
             array_push($genreIDs, filter_input(INPUT_POST, 'genre' . $i));
         }
         $genres = array();
-        for($i = 0; $i < count($genreIDs); $i++) {
+        for ($i = 0; $i < count($genreIDs); $i++) {
             $genre = GenreDB::getGenreByID($genreIDs[$i]);
             array_push($genres, $genre);
         }
@@ -87,17 +100,18 @@ switch ($action) {
         $newRating = new Rating($user->getUserID(), $tmdbID, $rating, $movie);
 
         $ratings = RatingDB::getUserMovieRatings($user);
+        var_dump($ratings);
         $ratedMovieIDs = array();
-        for($i = 0; $i < count($ratings); $i++){
+        for ($i = 0; $i < count($ratings); $i++) {
             array_push($ratedMovieIDs, $ratings[$i]->getTmdbID());
         }
-        if(in_array($movie->getTmdbID(), $ratedMovieIDs)){
+        if (in_array($movie->getTmdbID(), $ratedMovieIDs)) {
             RatingDB::editRating($newRating);
         } else {
             RatingDB::addRating($newRating);
         }
-        
-        
+
+
     //sequence matters for fall-through here
     case "rater":
         if (!isset($rating)) {
@@ -235,7 +249,9 @@ switch ($action) {
             UserDB::addUser($user);
 
             $_SESSION['loginUser'] = $username;
-            include("./account/account_login.php");
+            $user = UserDB::getUserByUsername($username);
+            $ratings = RatingDB::getUserMovieRatings($user);
+            include './main/profile.php';
             die();
         }
         break;

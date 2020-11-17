@@ -11,6 +11,27 @@ class UserDB {
         return $results;
     }
 
+    public static function search($search){        
+        $search = '%' . $search . '%';
+        $db = Database::getDB();
+        $query = "SELECT * FROM users
+                WHERE username LIKE :search";
+        $statement = $db->prepare($query);
+        $statement->bindValue(":search", $search);        
+        $statement->execute();
+        $rows = $statement->fetchAll();        
+        $statement->closeCursor();
+        $results = null;
+        foreach ($rows as $row) {
+            $user = new User($row['email'], $row['username'], '');
+            $user->setUserID($row['userID']);
+
+            $results[] = $user;
+        }
+
+        return $results;
+    }
+    
     public static function getUser($userID) {
         $db = Database::getDB();
         $query = 'SELECT * FROM users
@@ -18,17 +39,20 @@ class UserDB {
         $statement = $db->prepare($query);
         $statement->bindValue(":userID", $userID);
         $statement->execute();
-        $user = $statement->fetch();
+        $row = $statement->fetch();
         $statement->closeCursor();
+        
+        $user = new User($row['email'], $row['username'], '');
+        $user->setUserID($row['userID']);
         return $user;
     }
 
     public static function getUserByUserName($username) {
         $db = Database::getDB();
         $query = 'SELECT * FROM Users
-                  WHERE username = :User_name';
+                  WHERE username = :username';
         $statement = $db->prepare($query);
-        $statement->bindValue(":User_name", $username);
+        $statement->bindValue(":username", $username);
         $statement->execute();
         $row = $statement->fetch(PDO::FETCH_ASSOC);
         $statement->closeCursor();

@@ -8,7 +8,8 @@ body {
 
 .searchRow {
     background-color: lightgrey;
-    
+    border-radius: 6px;
+    overflow: hidden;    
 }
 
 .carousel-inner img {
