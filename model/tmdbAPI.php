@@ -46,8 +46,7 @@ class TmdbAPI {
         $ch = curl_init();
         $params = ['api_key' => 'ce996ee388766d7471956f7e323701ae',
             'language' => 'en-US'];
-        $endpoint = "https://api.themoviedb.org/3/movie/
-";
+        $endpoint = "https://api.themoviedb.org/3/movie/";
         $url = $endpoint . $tmdbID . '?' . http_build_query($params);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -56,6 +55,25 @@ class TmdbAPI {
         $movie = json_decode($response, true);
         curl_close($ch);
         return $movie;
+    }
+    
+    public static function getSearchResults($search){
+        $ch = curl_init();
+        $params = ['api_key' => 'ce996ee388766d7471956f7e323701ae',
+            'language' => 'en-US',
+            'include_adult' => 'false',
+            'query' => $search,
+            'page' => 1];
+        $endpoint = "https://api.themoviedb.org/3/search/movie";
+        $url = $endpoint . '?' . http_build_query($params);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $searchResults = json_decode($response, true);
+        $searchResults = $searchResults['results'];
+        curl_close($ch);
+        return $searchResults;
     }
 
 }

@@ -25,29 +25,14 @@ class RatingDB {
         $tmdbID = $rating->getTmdbID();
         $newRating = $rating->getRating();
         $movie = $rating->getMovie();
+        $genres = $movie->getGenres();
 
         //if a movie with this tmdb hasn't been entered into the database yet,
         //then enter it
-        if(MovieDB::getMovie($tmdbID) === false) {
-            try{
-                $query = 'INSERT INTO movies
-                          (tmdbID, title, overview, poster)
-                            VALUES
-                          (:tmdbID, :title, :overview, :poster)';
-                $statement = $db->prepare($query);                
-                $statement->bindValue(':tmdbID', $tmdbID);
-                $statement->bindValue(':title', $movie->getTitle());
-                $statement->bindValue(':overview', $movie->getOverview());
-                $statement->bindValue(':poster', $movie->getPoster());
-                $statement->execute();
-                $statement->closeCursor();
-            } catch (Exception $ex) {
-                $error_message = $e->getMessage();
-                include("index.php");
-                exit();
-            }
+        if (MovieDB::getMovie($tmdbID) === false) {
+            MovieDB::addMovie($movie);
         }
-        
+
         try {
             $query = 'INSERT INTO ratings
                 (userID, tmdbID, rating)
@@ -66,8 +51,35 @@ class RatingDB {
         }
     }
     
-    public static function getUserMovieRatings($user){
+    public static function editRating($rating){
         $db = Database::getDB();
+        
+        $userID = $rating->getUserID();
+        $tmdbID = $rating->getTmdbID();
+        $newRating = $rating->getRating();
+        
+        
+        try {
+            $query = 'UPDATE ratings
+                SET rating = :rating
+                WHERE userID = :userID
+                AND tmdbID = :tmdbID';
+            $statement = $db->prepare($query);
+            $statement->bindValue(':userID', $userID);
+            $statement->bindValue(':tmdbID', $tmdbID);
+            $statement->bindValue(':rating', $newRating);
+            $statement->execute();
+            $statement->closeCursor();
+        } catch (PDOException $e) {
+            $error_message = $e->getMessage();
+            include("index.php");
+            exit();
+        }
+    }
+
+    public static function getUserMovieRatings($user) {
+        $db = Database::getDB();                
+        
         $query = 'SELECT * FROM ratings r
                   INNER JOIN movies m ON r.tmdbID = m.tmdbID
                   WHERE userID = :userID';
@@ -76,17 +88,17 @@ class RatingDB {
         $statement->execute();
         $rows = $statement->fetchAll();
         $statement->closeCursor();
-        
         $ratings = null;
-        foreach ($rows as $row){
-            $movie = new  Movie($row['tmdbID'], $row['title'], $row['overview'], $row['poster']);
+        foreach ($rows as $row) {
+            $movie = MovieDB::getMovie($row['tmdbID']);
             $rating = new Rating($row['userID'], $row['tmdbID'], $row['rating'], $movie);
             $rating->setRatingID($row['ratingID']);
             $rating->setRatingDate($row['ratingDate']);
-            
+
             $ratings[] = $rating;
         }
-        
+
         return $ratings;
     }
+
 }

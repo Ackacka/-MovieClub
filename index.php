@@ -13,13 +13,16 @@ require_once './model/rating.php';
 require_once './model/ratingDB.php';
 require_once './model/validation.php';
 require_once './model/tmdbapi.php';
+require_once './model/genre.php';
+require_once './model/genreDB.php';
 
 
 if (empty($_SESSION['loginUser'])) {
     $_SESSION['loginUser'] = "defaultUser";
 }
 
-if(isset($error_message))var_dump($error_message);
+if (isset($error_message))
+    var_dump($error_message);
 
 $action = filter_input(INPUT_POST, "action");
 if ($action === null) {
@@ -40,40 +43,81 @@ $tmdbAuth = 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZTk5NmVlMzg4
 
 
 switch ($action) {
+    case "searchUsersPage":
+        
+        include './main/userSearch.php';
+        die();
+        break;
+    case "search":
+        $search = filter_input(INPUT_POST, 'search');
+        $searchResults = TmdbAPI::getSearchResults($search);
+        include './main/searchResults.php';
+        die();
+        break;
+    case "viewMovie":
+        $movieID = filter_input(INPUT_GET, 'movie');
+        $movie = TmdbAPI::getMovie($movieID);
+        include './main/movie.php';
+        die();
+        break;
     case "profile":
         $ratings = RatingDB::getUserMovieRatings($user);
+        
         include './main/profile.php';
         die();
         break;
     case "addRating":
+        $genreCounter = filter_input(INPUT_POST, 'genreCounter');
         $rating = filter_input(INPUT_POST, 'rating');
         $tmdbID = filter_input(INPUT_POST, 'movieID');
         $title = filter_input(INPUT_POST, 'title');
         $overview = filter_input(INPUT_POST, 'overview');
         $poster = filter_input(INPUT_POST, 'poster');
-        
-        $movie = new Movie($tmdbID, $title, $overview, $poster);
+        $genreIDs = array();
+        for($i = 0; $i < $genreCounter; $i++){
+            array_push($genreIDs, filter_input(INPUT_POST, 'genre' . $i));
+        }
+        $genres = array();
+        for($i = 0; $i < count($genreIDs); $i++) {
+            $genre = GenreDB::getGenreByID($genreIDs[$i]);
+            array_push($genres, $genre);
+        }
+
+        $movie = new Movie($tmdbID, $title, $overview, $poster, $genres);
         $newRating = new Rating($user->getUserID(), $tmdbID, $rating, $movie);
+
+        $ratings = RatingDB::getUserMovieRatings($user);
+        $ratedMovieIDs = array();
+        for($i = 0; $i < count($ratings); $i++){
+            array_push($ratedMovieIDs, $ratings[$i]->getTmdbID());
+        }
+        if(in_array($movie->getTmdbID(), $ratedMovieIDs)){
+            RatingDB::editRating($newRating);
+        } else {
+            RatingDB::addRating($newRating);
+        }
         
         
-        RatingDB::addRating($newRating);
-        $ratings = RatingDB::getUserMovieRatings($user);   
-        //sequence matters for fall-through here
+    //sequence matters for fall-through here
     case "rater":
         if (!isset($rating)) {
             $rating = 0;
         }
-        
+
         $userRatings = RatingDB::getUserMovieRatings($user);
+
         $nonoIDs = array();
-        foreach ($userRatings as $rating){
-            array_push($nonoIDs, $rating->getTmdbID());
+        if (!is_null($userRatings)) {
+            foreach ($userRatings as $rating) {
+                array_push($nonoIDs, $rating->getTmdbID());
+            }
         }
+
         $movie = array();
         do {
             $movie = TmdbAPI::getRandomPopular();
         } while (in_array($movie['id'], $nonoIDs));
-        
+
         include './main/rater.php';
         die();
         break;
@@ -114,7 +158,7 @@ switch ($action) {
             $passwordError = "";
             $_SESSION['loginUser'] = $username;
             $user = UserDB::getUserByUsername($username);
-            $movie = TmdbAPI::getRandomPopular();
+            $movies = TmdbAPI::getTopPopular(10);
             include './main/main.php';
             die();
             break;
@@ -198,6 +242,7 @@ switch ($action) {
     case "logOut":
         session_destroy();
         $_SESSION['loginUser'] = 'defaultUser';
+        $movies = TmdbAPI::getTopPopular(10);
         include "./main/main.php";
         die();
         break;

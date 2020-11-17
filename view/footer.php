@@ -1,4 +1,4 @@
-<footer>
+<footer class="mt-5">
     <?php if ($_SESSION['loginUser'] !== 'defaultUser') { ?>
         <h4>Logged in as <?php echo $user->getUsername(); ?></h4>
     <?php } ?>
