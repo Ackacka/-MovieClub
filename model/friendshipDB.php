@@ -144,5 +144,27 @@ class FriendshipDB {
         array_push($userArray, $userHigh);
         return $userArray;
     }
+    
+    public static function getFriends($user){
+        $db = Database::getDB();
+        $query = 'SELECT * FROM userrelationships
+                WHERE userFirstID = :user
+                OR userSecondID = :user';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user', $user->getUserID());
+        $statement->execute();
+        $rows = $statement->fetchAll();
+        $friends = array();
+        
+        foreach ($rows as $row) {
+            if ($user->getUserID() === $row['userFirstID']) {
+                array_push($friends, $row['userSecondID']);
+            } else {
+                array_push($friends, $row['userFirstID']);
+            }
+        }
+       
+        return $friends;
+    }
 
 }

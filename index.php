@@ -76,7 +76,14 @@ switch ($action) {
     case "searchUsers":
         $search = filter_input(INPUT_POST, 'usernameSearch');
         $search = htmlspecialchars($search);
+        $results = array();
+        $friends = FriendshipDB::getFriends($user);
         if($search !== "") $results = UserDB::search($search);
+        foreach ($results as $i => $result){
+            if($user->getUserID() === $result->getUserID()){
+                unset($results[$i]);
+            }
+        }
         //case order matters here
     case "searchUsersPage":
         if(!isset($results)) $results = array();
@@ -122,7 +129,6 @@ switch ($action) {
         $newRating = new Rating($user->getUserID(), $tmdbID, $rating, $movie);
 
         $ratings = RatingDB::getUserMovieRatings($user);
-        var_dump($ratings);
         $ratedMovieIDs = array();
         for ($i = 0; $i < count($ratings); $i++) {
             array_push($ratedMovieIDs, $ratings[$i]->getTmdbID());
@@ -273,7 +279,7 @@ switch ($action) {
             $_SESSION['loginUser'] = $username;
             $user = UserDB::getUserByUsername($username);
             $ratings = RatingDB::getUserMovieRatings($user);
-            include './main/profile.php';
+            include './main/main.php';
             die();
         }
         break;

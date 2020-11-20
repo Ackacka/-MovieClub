@@ -20,17 +20,21 @@
     </form>
     <?php if (count($results) > 0) { ?>
         <div class="container">
-            <?php for ($i = 0; $i < count($results); $i++) { ?>
+            <?php foreach ($results as $result) { ?>
 
                 <div class="row searchRow h-100 m-1">            
                     <div class="col-sm m-3 p-2">
-                        <h4><?php echo $results[$i]->getUsername(); ?></h4>                        
+                        <h4><?php echo $result->getUsername(); ?></h4>                        
                     </div>
                     <div class="col-sm m-auto p-2">
                         <form method="post" action="index.php">
                             <input type="hidden" name="action" value="friendInvite">
-                            <input type="hidden" name="userIDto" value="<?php echo $results[$i]->getUserID(); ?>">
-                            <button type="submit" class="btn btn-primary btn-sm align-items-center float-right">Add</button>
+                            <input type="hidden" name="userIDto" value="<?php echo $result->getUserID(); ?>">
+                            <?php if (in_array($result->getUserID(), $friends)) { ?>
+                                <button type="submit" class="btn btn-primary btn-sm align-items-center float-right" disabled>friends</button>
+                            <?php } else { ?>
+                                <button type="submit" class="btn btn-primary btn-sm align-items-center float-right">Add</button>
+                            <?php } ?>
 
                         </form>
                     </div>
