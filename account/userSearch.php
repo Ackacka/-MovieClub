@@ -24,7 +24,10 @@
 
                 <div class="row searchRow h-100 m-1">            
                     <div class="col-sm m-3 p-2">
-                        <h4><?php echo $result->getUsername(); ?></h4>                        
+                        <a href="index.php?action=showProfile&profileUser=<?php echo $result->getUsername() ?>">
+                            <img src="<?php echo $result->getProPic(); ?>" style="width: 7rem">
+                            <h4><?php echo $result->getUsername(); ?></h4>   
+                        </a>
                     </div>
                     <div class="col-sm m-auto p-2">
                         <form method="post" action="index.php">

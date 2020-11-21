@@ -14,7 +14,7 @@
 
     <label for="username">Username:</label>
 
-    <input type="text" id="username" value="<?php echo htmlspecialchars($username); ?>" placeholder="Enter Username" name="username"/>
+    <input type="text" id="username" value="<?php if($username !== 'defaultUser') echo htmlspecialchars($username); ?>" placeholder="Enter Username" name="username"/>
     <span class="errorMsg"> <?php echo htmlspecialchars($usernameError) ?></span>
     <br>
     
@@ -24,14 +24,12 @@
     <span class="errorMsg"> <?php echo htmlspecialchars($passwordError) ?></span>
     <br>
     
+    <input type="file" name="image" />
+    
     <button type="submit">Register</button>
 
-</div>
-</form>
-</div>
-</div>
-</div>       
-</body>
-</html>
+
+</form>  
+
 
 <?php include 'view/footer.php'; ?>

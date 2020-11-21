@@ -45,25 +45,121 @@ $tmdbAuth = 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZTk5NmVlMzg4
 
 
 switch ($action) {
+    case "showProfile":
+        $username = filter_input(INPUT_GET, 'profileUser');
+        $profileUser = UserDB::getUserByUsername($username);
+
+        include './account/profile.php';
+        die();
+        break;
+    case "editProfileForm":
+        if (!isset($usernameError)) {
+            $usernameError = '';
+        }
+        if (!isset($passwordError)) {
+            $passwordError = '';
+        }
+        if (!isset($username)) {
+            $username = '';
+        }
+        if (!isset($password)) {
+            $password = '';
+        }
+        include './account/editProfile.php';
+        die();
+        break;
+    case "editProfile":
+        $username = filter_input(INPUT_POST, 'username');
+        $password = filter_input(INPUT_POST, 'password');
+        $email = $user->getEmail();
+        $proPic = $user->getProPic();
+        $passwordError = '';
+        $pwdHash = '';
+
+        $usernameError = Validation::validUsername($username, 'Username');
+        if ($username == "") {
+            if (UserDB::uniqueUsernameTest($username) === false) {
+                $usernameError = 'Username already taken.';
+            }
+        }
+        if ($password !== "") {
+            $passwordError = Validation::validPassword($password, 'Password');
+            $pwdHash = password_hash($password, PASSWORD_BCRYPT);
+        }
+
+
+        if (isset($_FILES['image'])) {
+            $errors = array();
+            $fileName = $_FILES['image']['name'];
+            $fileSize = $_FILES['image']['size'];
+            $fileTemp = $_FILES['image']['tmp_name'];
+            $fileType = $_FILES['image']['type'];
+            $expFile = explode('.', $fileName);
+            $fileExt = end($expFile);
+            $fileExt = strtolower($fileExt);
+            $proPic = "./img/" . $username . $fileName;
+
+            $extensions = array("jpeg", "jpg", "png", "gif");
+
+            if (in_array($fileExt, $extensions) === false) {
+                $errors[] = "file extension not in whitelist: " . join(',', $extensions);
+            }
+
+            if ($usernameError != '') {
+                array_push($errors, 'filename characters');
+            }
+
+            if (empty($errors)) {
+                move_uploaded_file($fileTemp, $proPic);
+            }
+        }
+        //write user information to database
+        if ($usernameError !== '' || $passwordError !== '') {
+            include("./account/editProfile.php");
+            die();
+        } else if ($password !== "") {
+            $updateUser = new User($email, $username, $pwdHash, $proPic);
+            $updateUser->setUserID($user->getUserID());
+            UserDB::updateUser($updateUser);
+
+            $_SESSION['loginUser'] = $username;
+            $user = UserDB::getUserByUsername($username);
+            $ratings = RatingDB::getUserMovieRatings($user);
+            $requestingUsers = ContHelper::getRequestingUsers($user);
+            include './account/dashboard.php';
+            die();
+        } else {
+            $updateUser = new User($email, $username, '', $proPic);
+            $updateUser->setUserID($user->getUserID());
+            UserDB::updateUserNoPass($updateUser);
+
+            $_SESSION['loginUser'] = $username;
+            $user = UserDB::getUserByUsername($username);
+            $ratings = RatingDB::getUserMovieRatings($user);
+            $requestingUsers = ContHelper::getRequestingUsers($user);
+            include './account/dashboard.php';
+            die();
+        }
+        break;
     case "friendDecline":
         $userIDFrom = filter_input(INPUT_POST, 'userIDfromDec');
         $userFrom = UserDB::getUser($userIDFrom);
         FriendshipDB::declineFriendRequest($userFrom, $user);
         $requestingUsers = ContHelper::getRequestingUsers($user);
-        include './user/dashboard.php';
+        include './account/dashboard.php';
         die();
         break;
     case "friendAccept":
-        $userIDFrom = filter_input(INPUT_POST, 'userIDfromAcc');        
+        $userIDFrom = filter_input(INPUT_POST, 'userIDfromAcc');
         $userFrom = UserDB::getUser($userIDFrom);
         FriendshipDB::acceptFriendRequest($userFrom, $user);
         $requestingUsers = ContHelper::getRequestingUsers($user);
-        include './user/dashboard.php';
+        include './account/dashboard.php';
         die();
         break;
     case "dashboard":
         $requestingUsers = ContHelper::getRequestingUsers($user);
-        include './user/dashboard.php';
+        include './account/dashboard.php';
         die();
         break;
     case "friendInvite":
@@ -72,23 +168,25 @@ switch ($action) {
         FriendshipDB::sendFriendRequest($user, $userTo);
         include './main/requestConfirmation.php';
         die();
-        break;        
+        break;
     case "searchUsers":
         $search = filter_input(INPUT_POST, 'usernameSearch');
-        $search = htmlspecialchars($search);
         $results = array();
         $friends = FriendshipDB::getFriends($user);
-        if($search !== "") $results = UserDB::search($search);
-        foreach ($results as $i => $result){
-            if($user->getUserID() === $result->getUserID()){
+        if ($search !== "")
+            $results = UserDB::search($search);
+        foreach ($results as $i => $result) {
+            if ($user->getUserID() === $result->getUserID()) {
                 unset($results[$i]);
             }
         }
-        //case order matters here
+    //case order matters here
     case "searchUsersPage":
-        if(!isset($results)) $results = array();
-        if(!isset($search)) $search = "";
-        include './user/userSearch.php';
+        if (!isset($results))
+            $results = array();
+        if (!isset($search))
+            $search = "";
+        include './account/userSearch.php';
         die();
         break;
     case "search":
@@ -105,7 +203,7 @@ switch ($action) {
         break;
     case "myRatingsPage":
         $ratings = RatingDB::getUserMovieRatings($user);
-        include './user/myRatingsPage.php';
+        include './account/myRatingsPage.php';
         die();
         break;
     case "addRating":
@@ -160,7 +258,7 @@ switch ($action) {
             $movie = TmdbAPI::getRandomPopular();
         } while (in_array($movie['id'], $nonoIDs));
 
-        include './user/rater.php';
+        include './account/rater.php';
         die();
         break;
     case "main":
@@ -182,12 +280,7 @@ switch ($action) {
         if (!isset($password)) {
             $password = '';
         }
-        include 'account/account_login.php';
-        die();
-        break;
-    case "logOut":
-        $_SESSION['loginUser'] = 'defaultUser';
-        include './main/main.php';
+        include 'account/accountLogin.php';
         die();
         break;
     case "userLogin":
@@ -222,7 +315,7 @@ switch ($action) {
             $password = '';
         }
 
-        include './account/account_login.php';
+        include './account/accountLogin.php';
         die();
         break;
     case "register":
@@ -244,13 +337,14 @@ switch ($action) {
         if (!isset($passwordError)) {
             $passwordError = '';
         }
-        include 'account/account_register.php';
+        include 'account/accountRegister.php';
         die();
         break;
     case "addUser":
         $email = filter_input(INPUT_POST, 'email');
         $username = filter_input(INPUT_POST, 'username');
         $password = filter_input(INPUT_POST, 'password');
+        $proPic = './img/cat.jpg';
 
         $emailError = Validation::validEmail($email, 'Email');
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -260,20 +354,45 @@ switch ($action) {
             $emailError = 'Email already in use.';
         }
         $usernameError = Validation::validUsername($username, 'Username');
-        if ($username == "") {
-            if (UserDB::uniqueUsernameTest($username) === false) {
-                $usernameError = 'Username already taken.';
-            }
+
+        if (!UserDB::uniqueUsernameTest($username) === false) {
+            $usernameError = 'Username already taken.';
         }
+
         $passwordError = Validation::validPassword($password, 'Password');
         $pwdHash = password_hash($password, PASSWORD_BCRYPT);
 
+        if (isset($_FILES['image'])) {
+            $errors = array();
+            $fileName = $_FILES['image']['name'];
+            $fileSize = $_FILES['image']['size'];
+            $fileTemp = $_FILES['image']['tmp_name'];
+            $fileType = $_FILES['image']['type'];
+            $expFile = explode('.', $fileName);
+            $fileExt = end($expFile);
+            $fileExt = strtolower($fileExt);
+            $proPic = "./img/" . $username . $fileName;
+
+            $extensions = array("jpeg", "jpg", "png", "gif");
+
+            if (in_array($fileExt, $extensions) === false) {
+                $errors[] = "file extension not in whitelist: " . join(',', $extensions);
+            }
+
+            if ($usernameError != '') {
+                array_push($errors, 'filename characters');
+            }
+
+            if (empty($errors)) {
+                move_uploaded_file($fileTemp, $proPic);
+            }
+        }
         //write user information to database
         if ($usernameError !== '' || $emailError !== '' || $passwordError !== '') {
-            include("./account/account_register.php");
+            include("./account/accountRegister.php");
             die();
         } else {
-            $user = new User($email, $username, $pwdHash);
+            $user = new User($email, $username, $pwdHash, $proPic);
             UserDB::addUser($user);
 
             $_SESSION['loginUser'] = $username;
