@@ -3,13 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/omdbTest/account/userSearch.php</file>
-            <file>file:/C:/xampp/htdocs/omdbTest/view/header.php</file>
+            <file>file:/C:/xampp/htdocs/omdbTest/account/editProfile.php</file>
             <file>file:/C:/xampp/htdocs/omdbTest/main.css</file>
-            <file>file:/C:/xampp/htdocs/omdbTest/main/main.php</file>
             <file>file:/C:/xampp/htdocs/omdbTest/index.php</file>
-            <file>file:/C:/xampp/htdocs/omdbTest/model/tmdbAPI.php</file>
-            <file>file:/C:/xampp/htdocs/omdbTest/account/rater.php</file>
+            <file>file:/C:/xampp/htdocs/omdbTest/account/dashboard.php</file>
         </group>
     </open-files>
 </project-private>

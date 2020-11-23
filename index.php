@@ -45,6 +45,18 @@ $tmdbAuth = 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZTk5NmVlMzg4
 
 
 switch ($action) {
+    case "friendsList":
+        $friendsIDs = FriendshipDB::getFriends($user);
+        $friends = array();
+        for ($i = 0; $i < count($friendsIDs); $i++){
+            $friend = UserDB::getUser($friendsIDs[$i]);
+            array_push($friends, $friend);
+        }
+        
+
+        include './account/friendsList.php';
+        die();
+        break;
     case "showProfile":
         $username = filter_input(INPUT_GET, 'profileUser');
         $profileUser = UserDB::getUserByUsername($username);
@@ -124,8 +136,9 @@ switch ($action) {
 
             $_SESSION['loginUser'] = $username;
             $user = UserDB::getUserByUsername($username);
-            $ratings = RatingDB::getUserMovieRatings($user);
             $requestingUsers = ContHelper::getRequestingUsers($user);
+            
+            $top3Genres = ContHelper::getTop3Genres($user);
             include './account/dashboard.php';
             die();
         } else {
@@ -137,6 +150,8 @@ switch ($action) {
             $user = UserDB::getUserByUsername($username);
             $ratings = RatingDB::getUserMovieRatings($user);
             $requestingUsers = ContHelper::getRequestingUsers($user);
+            
+            $top3Genres = ContHelper::getTop3Genres($user);
             include './account/dashboard.php';
             die();
         }
@@ -146,6 +161,7 @@ switch ($action) {
         $userFrom = UserDB::getUser($userIDFrom);
         FriendshipDB::declineFriendRequest($userFrom, $user);
         $requestingUsers = ContHelper::getRequestingUsers($user);
+        $top3Genres = ContHelper::getTop3Genres($user);
         include './account/dashboard.php';
         die();
         break;
@@ -154,32 +170,14 @@ switch ($action) {
         $userFrom = UserDB::getUser($userIDFrom);
         FriendshipDB::acceptFriendRequest($userFrom, $user);
         $requestingUsers = ContHelper::getRequestingUsers($user);
+        $top3Genres = ContHelper::getTop3Genres($user);
         include './account/dashboard.php';
         die();
         break;
     case "dashboard":
         $requestingUsers = ContHelper::getRequestingUsers($user);
-        $ratings = RatingDB::getUserMovieRatings($user);
-        $genres = GenreDB::getGenres();
-        $genreCount = array();
-        foreach ($genres as $genre) {
-            $genreCount[$genre->getName()] = 0;
-        }
-        if (!is_null($ratings)) {
-            foreach ($ratings as $rating) {
-                for ($i = 0; $i < count($rating->getMovie()->getGenres()); $i++) {
-                    $genreCount[$rating->getMovie()->getGenres()[$i]->getName()]++;
-                }
-            }
-            arsort($genreCount);
+        $top3Genres = ContHelper::getTop3Genres($user);
 
-            $top3Genres = array();
-            for ($i = 0; $i < 3; $i++) {
-                $top3Genres[key($genreCount)] = reset($genreCount);
-                array_shift($genreCount);
-            }
-        }
-        
         include './account/dashboard.php';
         die();
         break;

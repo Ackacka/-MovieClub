@@ -6,7 +6,7 @@
             <a class="nav-link active" href="index.php?action=searchUsersPage">Add new friends</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Friends list</a>
+            <a class="nav-link" href="index.php?action=friendsList">Friends list</a>
         </li>
 
     </ul>

@@ -34,8 +34,9 @@
                     <?php } ?>
                 </ul>
             </div>
+            </div>
         <?php } ?>
-    </div>
+    
 
 
 </div>
