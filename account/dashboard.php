@@ -22,9 +22,20 @@
                 </div>
 
             </div>
-        <?php } ?>
+        <?php } ?>        
     <?php } ?>
-
+    <?php if (isset($top3Genres)) { ?>
+        <div class="container">
+            <div class="col-sm board m-3 p-1">
+                <h4>Genres with the most ratings:</h4>
+                <ul>
+                    <?php foreach ($top3Genres as $genre => $count) { ?>                    
+                        <li><?php echo $genre ?>: <?php echo $count ?></li>
+                    <?php } ?>
+                </ul>
+            </div>
+        <?php } ?>
+    </div>
 
 
 </div>

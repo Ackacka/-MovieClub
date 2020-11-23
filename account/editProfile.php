@@ -18,8 +18,9 @@
     <span class="errorMsg"> <?php echo htmlspecialchars($passwordError) ?></span>
     <br>
     
+    <label for="password">Profile Picture:</label>
     <input type="file" name="image" />
-    
+    <br>
     <button type="submit">Save Edits</button>
 
 

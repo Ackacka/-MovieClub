@@ -16,7 +16,7 @@ require_once './model/tmdbapi.php';
 require_once './model/genre.php';
 require_once './model/genreDB.php';
 require_once './model/friendshipDB.php';
-require_once './middle/contHelper.php';
+require_once './model/contHelper.php';
 
 
 if (empty($_SESSION['loginUser'])) {
@@ -159,6 +159,27 @@ switch ($action) {
         break;
     case "dashboard":
         $requestingUsers = ContHelper::getRequestingUsers($user);
+        $ratings = RatingDB::getUserMovieRatings($user);
+        $genres = GenreDB::getGenres();
+        $genreCount = array();
+        foreach ($genres as $genre) {
+            $genreCount[$genre->getName()] = 0;
+        }
+        if (!is_null($ratings)) {
+            foreach ($ratings as $rating) {
+                for ($i = 0; $i < count($rating->getMovie()->getGenres()); $i++) {
+                    $genreCount[$rating->getMovie()->getGenres()[$i]->getName()]++;
+                }
+            }
+            arsort($genreCount);
+
+            $top3Genres = array();
+            for ($i = 0; $i < 3; $i++) {
+                $top3Genres[key($genreCount)] = reset($genreCount);
+                array_shift($genreCount);
+            }
+        }
+        
         include './account/dashboard.php';
         die();
         break;
@@ -228,9 +249,12 @@ switch ($action) {
 
         $ratings = RatingDB::getUserMovieRatings($user);
         $ratedMovieIDs = array();
-        for ($i = 0; $i < count($ratings); $i++) {
-            array_push($ratedMovieIDs, $ratings[$i]->getTmdbID());
+        if (!is_null($ratings)) {
+            for ($i = 0; $i < count($ratings); $i++) {
+                array_push($ratedMovieIDs, $ratings[$i]->getTmdbID());
+            }
         }
+
         if (in_array($movie->getTmdbID(), $ratedMovieIDs)) {
             RatingDB::editRating($newRating);
         } else {

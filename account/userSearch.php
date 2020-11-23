@@ -1,6 +1,15 @@
 <?php include 'view/header.php'; ?>
 
 <div class="container">
+    <ul class="nav justify-content-center socialNav m-3">
+        <li class="nav-item">
+            <a class="nav-link active" href="index.php?action=searchUsersPage">Add new friends</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Friends list</a>
+        </li>
+
+    </ul>
     <div class="row">
         <h3>Search for a friend's username</h3>
     </div>
