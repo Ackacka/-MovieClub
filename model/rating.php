@@ -9,8 +9,10 @@ class Rating {
         $this->tmdbID = $tmdbID;
         $this->rating = $rating;
         $this->movie = $movie;
-    }
+    }    
     
+
+        
     function getMovie() {
         return $this->movie;
     }

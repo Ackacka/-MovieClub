@@ -11,6 +11,8 @@ require_once './model/movie.php';
 require_once './model/movieDB.php';
 require_once './model/rating.php';
 require_once './model/ratingDB.php';
+require_once './model/review.php';
+require_once './model/reviewDB.php';
 require_once './model/validation.php';
 require_once './model/tmdbapi.php';
 require_once './model/genre.php';
@@ -48,11 +50,11 @@ switch ($action) {
     case "friendsList":
         $friendsIDs = FriendshipDB::getFriends($user);
         $friends = array();
-        for ($i = 0; $i < count($friendsIDs); $i++){
+        for ($i = 0; $i < count($friendsIDs); $i++) {
             $friend = UserDB::getUser($friendsIDs[$i]);
             array_push($friends, $friend);
         }
-        
+
 
         include './account/friendsList.php';
         die();
@@ -137,7 +139,7 @@ switch ($action) {
             $_SESSION['loginUser'] = $username;
             $user = UserDB::getUserByUsername($username);
             $requestingUsers = ContHelper::getRequestingUsers($user);
-            
+
             $top3Genres = ContHelper::getTop3Genres($user);
             include './account/dashboard.php';
             die();
@@ -150,7 +152,7 @@ switch ($action) {
             $user = UserDB::getUserByUsername($username);
             $ratings = RatingDB::getUserMovieRatings($user);
             $requestingUsers = ContHelper::getRequestingUsers($user);
-            
+
             $top3Genres = ContHelper::getTop3Genres($user);
             include './account/dashboard.php';
             die();
@@ -217,6 +219,16 @@ switch ($action) {
     case "viewMovie":
         $movieID = filter_input(INPUT_GET, 'movie');
         $movie = TmdbAPI::getMovie($movieID);
+        $rating = false;
+        $review = false;
+
+        if (!empty(RatingDB::getUserRatingByTmdbID($user, $movieID))) {
+            $rating = RatingDB::getUserRatingByTmdbID($user, $movieID);
+        }
+        if (!empty(ReviewDB::getUserReviewByTmdbID($user, $movieID))) {
+            $review = ReviewDB::getUserReviewByTmdbID($user, $movieID);
+        }
+
         include './main/movie.php';
         die();
         break;
@@ -228,6 +240,7 @@ switch ($action) {
     case "addRating":
         $genreCounter = filter_input(INPUT_POST, 'genreCounter');
         $rating = filter_input(INPUT_POST, 'rating');
+        $review = filter_input(INPUT_POST, 'newReview');
         $tmdbID = filter_input(INPUT_POST, 'movieID');
         $title = filter_input(INPUT_POST, 'title');
         $overview = filter_input(INPUT_POST, 'overview');
@@ -244,6 +257,11 @@ switch ($action) {
 
         $movie = new Movie($tmdbID, $title, $overview, $poster, $genres);
         $newRating = new Rating($user->getUserID(), $tmdbID, $rating, $movie);
+        $newReview = "";
+        if (!empty($review)) {
+            $review = trim($review);
+            $newReview = new Review($user->getUserID(), $tmdbID, $review, $movie);
+        }
 
         $ratings = RatingDB::getUserMovieRatings($user);
         $ratedMovieIDs = array();
@@ -257,6 +275,15 @@ switch ($action) {
             RatingDB::editRating($newRating);
         } else {
             RatingDB::addRating($newRating);
+        }
+        var_dump($newReview);
+        $reviewError = Validation::validLength($review, 'Review', 400);
+        if (!empty($newReview) && $reviewError === "") {
+            if (is_null(ReviewDB::getUserReviewByTmdbID($user, $tmdbID))) {
+                ReviewDB::addReview($newReview);
+            } else {
+                ReviewDB::editReview($newReview);
+            }
         }
 
 
@@ -285,7 +312,7 @@ switch ($action) {
         break;
     case "main":
 
-        $movies = TmdbAPI::getTopPopular(10);
+//        $movies = TmdbAPI::getTopPopular(10);
         include './main/main.php';
         die();
         break;

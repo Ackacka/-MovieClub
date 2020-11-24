@@ -12,9 +12,32 @@ class RatingDB {
         $row = $statement->fetch();
         $statement->closeCursor();
 
-        $rating = new Rating($row['userID'], $row['tmdbID']);
+
+        $rating = new Rating($row['userID'], $row['tmdbID'], $row['rating']);
         $rating->setRatingID($ratingID);
         $rating->setRatingDate($row['ratingDate']);
+        return $rating;
+    }
+
+    public static function getUserRatingByTmdbID($user, $tmdbID) {
+        $db = Database::getDB();
+        $query = 'SELECT * FROM ratings
+                  WHERE userID = :userID
+                  AND tmdbID = :tmdbID';
+        $statement = $db->prepare($query);
+        $statement->bindValue(":userID", $user->getUserID());
+        $statement->bindValue(":tmdbID", $tmdbID);
+        $statement->execute();
+        $row = $statement->fetch();
+        $statement->closeCursor();
+
+        $movie = MovieDB::getMovie($tmdbID);
+        $rating = null;
+        if (!empty($row)) {
+            $rating = new Rating($row['userID'], $row['tmdbID'], $row['rating'], $movie);
+            $rating->setRatingID($row['ratingID']);
+            $rating->setRatingDate($row['ratingDate']);
+        }
         return $rating;
     }
 
@@ -50,15 +73,15 @@ class RatingDB {
             exit();
         }
     }
-    
-    public static function editRating($rating){
+
+    public static function editRating($rating) {
         $db = Database::getDB();
-        
+
         $userID = $rating->getUserID();
         $tmdbID = $rating->getTmdbID();
         $newRating = $rating->getRating();
-        
-        
+
+
         try {
             $query = 'UPDATE ratings
                 SET rating = :rating
@@ -78,8 +101,8 @@ class RatingDB {
     }
 
     public static function getUserMovieRatings($user) {
-        $db = Database::getDB();                
-        
+        $db = Database::getDB();
+
         $query = 'SELECT * FROM ratings r
                   INNER JOIN movies m ON r.tmdbID = m.tmdbID
                   WHERE userID = :userID';
