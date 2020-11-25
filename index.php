@@ -336,7 +336,13 @@ switch ($action) {
         if (!is_null(ReviewDB::getUserReviewByTmdbID($user, $tmdbID))) {
             $review = ReviewDB::getUserReviewByTmdbID($user, $tmdbID);
         }
-
+        $favString = '';
+        $isFavorite = FavoriteDB::findFavorite($user->getUserID(), $tmdbID);
+        if ($isFavorite){
+            $favString = 'unfavorite';
+        } else {
+            $favString = 'favorite';
+        }
         include './main/movie.php';
         die();
         break;
@@ -358,6 +364,15 @@ switch ($action) {
         do {
             $movie = TmdbAPI::getRandomPopular();
         } while (in_array($movie['id'], $nonoIDs));
+        
+        //let view know whether movie is the user's favorite
+        $favString = '';
+        $isFavorite = FavoriteDB::findFavorite($user->getUserID(), $movie['id']);
+        if ($isFavorite){
+            $favString = 'unfavorite';
+        } else {
+            $favString = 'favorite';
+        }
 
         include './account/rater.php';
         die();

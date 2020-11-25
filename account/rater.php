@@ -5,6 +5,10 @@
     <div class="card m-10 mx-auto" style="width: 30rem;">
         <img class="card-img-top p-5"   src="https://image.tmdb.org/t/p/w500<?php echo $movie['poster_path']; ?>" alt="poster">
         <div class="card-body">
+            <a href="index.php?action=<?php echo $favString ?>&movie=<?php echo $movie['id'] ?>">
+                <i class="fas fa-heart fa-3x heart float-right <?php echo $favString ?>">
+                    </i>
+            </a>
             <h5 class="card-title"><?php echo $movie['title']; ?></h5>
             <p><em>Released <?php echo date_format(date_create($movie['release_date']), 'M Y'); ?>
                 </em></p>

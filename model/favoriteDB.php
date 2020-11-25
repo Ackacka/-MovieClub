@@ -4,6 +4,19 @@ class FavoriteDB {
 
     public static function addFavorite($userID, $tmdbID) {
         
+        $tmdbMovie = TmdbAPI::getMovie($tmdbID);
+        $genres = array();
+        for ($i = 0; $i < count($tmdbMovie['genres']); $i++){
+            $genre = new Genre($tmdbMovie['genres'][$i]['id'], $tmdbMovie['genres'][$i]['name']);
+            array_push($genres, $genre);
+        }
+        $movie = new Movie($tmdbMovie['id'], $tmdbMovie['title'], $tmdbMovie['overview'],
+                $tmdbMovie['poster_path'], $genres);
+        
+        if (MovieDB::getMovie($tmdbID) === false) {
+            MovieDB::addMovie($movie);
+        }
+        
         try {
             $db = Database::getDB();
             $query = 'INSERT INTO favorites
@@ -15,8 +28,8 @@ class FavoriteDB {
             $statement->bindValue(":tmdbID", $tmdbID);
             $statement->execute();
             $statement->closeCursor();
-        } catch (Exception $ex) {
-            $error_message = $e->getMessage();
+        } catch (PDOException $ex) {
+            $error_message = $ex->getMessage();
             include("index.php");
             exit();
         }
