@@ -21,6 +21,12 @@
                     <input type="hidden" name="genre<?php echo $genreCounter ?>" value="<?php echo $movie['genre_ids'][$genreCounter] ?>">
                 <?php } ?>
                 <input type="hidden" name="genreCounter" value="<?php echo $genreCounter ?>">
+                <div class="collapse" id="collapseTxtReview">
+                    <div class="form-group">
+                        <label for="txtReview">Your review</label>
+                        <textarea class="form-control" id="txtReview" name="newReview" rows="3" maxlength="400"></textarea>
+                    </div>
+                </div>
                 <select id="ddRating" name="rating">
                     <?php for($i = 0; $i < 10; $i++) { ?>
                         <option value="<?php echo $i + 1 ?>"><?php echo $i + 1 ?> stars</option>
@@ -28,9 +34,13 @@
                 </select>
                 <br>
                 <input class="btn btn-outline-primary" type="submit" value="Submit">
+                <a href="#collapseTxtReview" class="btn btn-primary mr-auto"
+                   data-toggle="collapse"role="button" aria-expanded="false"
+                   aria-controls="collapseTxtReview">Write a review</a>
+                <a href="index.php?action=rater" class="btn btn-outline-secondary float-right">Haven't seen</a>
             </form>
                       
-            <a href="index.php?action=rater" class="btn btn-outline-secondary">Haven't seen</a>
+            
         </div>
     </div>
 </div>
