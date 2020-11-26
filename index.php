@@ -20,6 +20,7 @@ require_once './model/genreDB.php';
 require_once './model/friendshipDB.php';
 require_once './model/favoriteDB.php';
 require_once './model/contHelper.php';
+require_once './model/middleware.php';
 
 
 if (empty($_SESSION['loginUser'])) {
@@ -51,18 +52,19 @@ switch ($action) {
     case "unfavorite":
         $tmdbID = filter_input(INPUT_GET, 'movie');
         FavoriteDB::removeFavorite($user->getUserID(), $tmdbID);
-        
-        //load data for movie details page
-        $rating = false;
-        $review = false;
-        if (!is_null(RatingDB::getUserRatingByTmdbID($user, $tmdbID))) {
-            $rating = RatingDB::getUserRatingByTmdbID($user, $tmdbID);
-        }
-        if (!is_null(ReviewDB::getUserReviewByTmdbID($user, $tmdbID))) {
-            $review = ReviewDB::getUserReviewByTmdbID($user, $tmdbID);
-        }
         //tmdb's movie result array, not movie object.
         $movie = TmdbAPI::getMovie($tmdbID);
+        $ratingsReviewsUsers = MovieDB::getMovieRatingsAndReviews($movie['id']);
+        //load data for movie details page
+        $userRating = false;
+        $userReview = false;
+        if (!is_null(RatingDB::getUserRatingByTmdbID($user, $tmdbID))) {
+            $userRating = RatingDB::getUserRatingByTmdbID($user, $tmdbID);
+        }
+        if (!is_null(ReviewDB::getUserReviewByTmdbID($user, $tmdbID))) {
+            $userReview = ReviewDB::getUserReviewByTmdbID($user, $tmdbID);
+        }
+        
         $isFavorite = false;      
         $favString = 'favorite';
         include './main/movie.php';
@@ -71,18 +73,18 @@ switch ($action) {
     case "favorite":
         $tmdbID = filter_input(INPUT_GET, 'movie');
         FavoriteDB::addFavorite($user->getUserID(), $tmdbID);        
-        
-        //load data for movie details page
-        $rating = false;
-        $review = false;
-        if (!is_null(RatingDB::getUserRatingByTmdbID($user, $tmdbID))) {
-            $rating = RatingDB::getUserRatingByTmdbID($user, $tmdbID);
-        }
-        if (!is_null(ReviewDB::getUserReviewByTmdbID($user, $tmdbID))) {
-            $review = ReviewDB::getUserReviewByTmdbID($user, $tmdbID);
-        }
         //tmdb's movie result array, not movie object.
         $movie = TmdbAPI::getMovie($tmdbID);
+        $ratingsReviewsUsers = MovieDB::getMovieRatingsAndReviews($movie['id']);
+        //load data for movie details page
+        $userRating = false;
+        $userReview = false;
+        if (!is_null(RatingDB::getUserRatingByTmdbID($user, $tmdbID))) {
+            $userRating = RatingDB::getUserRatingByTmdbID($user, $tmdbID);
+        }
+        if (!is_null(ReviewDB::getUserReviewByTmdbID($user, $tmdbID))) {
+            $userReview = ReviewDB::getUserReviewByTmdbID($user, $tmdbID);
+        }
         $isFavorite = true;      
         $favString = 'unfavorite';
         include './main/movie.php';
@@ -260,14 +262,15 @@ switch ($action) {
     case "viewMovie":
         $movieID = filter_input(INPUT_GET, 'movie');
         $movie = TmdbAPI::getMovie($movieID);
-        $rating = false;
-        $review = false;
+        $ratingsReviewsUsers = MovieDB::getMovieRatingsAndReviews($movie['id']);
+        $userRating = false;
+        $userReview = false;
 
         if (!is_null(RatingDB::getUserRatingByTmdbID($user, $movieID))) {
-            $rating = RatingDB::getUserRatingByTmdbID($user, $movieID);
+            $userRating = RatingDB::getUserRatingByTmdbID($user, $movieID);
         }
         if (!is_null(ReviewDB::getUserReviewByTmdbID($user, $movieID))) {
-            $review = ReviewDB::getUserReviewByTmdbID($user, $movieID);
+            $userReview = ReviewDB::getUserReviewByTmdbID($user, $movieID);
         }
         $isFavorite = FavoriteDB::findFavorite($user->getUserID(), $movieID);
         $favString = '';
@@ -326,9 +329,10 @@ switch ($action) {
         }
         //movie is not a movie object, but an array of TMDB results from the 
         //tmdbID
-        $movie = TmdbAPI::getMovie($tmdbID);
-        $rating = false;
-        $review = false;
+        $movie = TmdbAPI::getMovie($movieID);
+        $ratingsReviewsUsers = MovieDB::getMovieRatingsAndReviews($movie['id']);
+        $userRating = false;
+        $userReview = false;
 
         if (!is_null(RatingDB::getUserRatingByTmdbID($user, $tmdbID))) {
             $rating = RatingDB::getUserRatingByTmdbID($user, $tmdbID);
@@ -373,13 +377,10 @@ switch ($action) {
         } else {
             $favString = 'favorite';
         }
-
         include './account/rater.php';
         die();
         break;
     case "main":
-
-//        $movies = TmdbAPI::getTopPopular(10);
         include './main/main.php';
         die();
         break;

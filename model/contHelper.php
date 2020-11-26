@@ -10,8 +10,8 @@ class ContHelper {
         }
         return $requestingUsers;
     }
-    
-    public static function getTop3Genres($user){
+
+    public static function getTop3Genres($user) {
         $ratings = RatingDB::getUserMovieRatings($user);
         $genres = GenreDB::getGenres();
         $genreCount = array();
@@ -27,7 +27,7 @@ class ContHelper {
             }
             arsort($genreCount);
 
-              
+
             for ($i = 0; $i < 3; $i++) {
                 $top3Genres[key($genreCount)] = reset($genreCount);
                 array_shift($genreCount);
@@ -35,4 +35,6 @@ class ContHelper {
         }
         return $top3Genres;
     }
+    
+
 }

@@ -8,6 +8,10 @@ body, html {
     height:100%;
 }
 
+.activeStar{
+    color: orange;
+}
+
 .favorite {
     color: black;
 }
@@ -35,6 +39,10 @@ body, html {
 
 body {
     background-color: slateblue;
+}
+
+.reviewBlurb {
+    border-radius: 4px;
 }
 
 #carousel {
