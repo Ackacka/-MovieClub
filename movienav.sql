@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 23, 2020 at 06:36 PM
+-- Generation Time: Dec 03, 2020 at 07:22 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.10
 
@@ -20,6 +20,35 @@ SET time_zone = "+00:00";
 --
 -- Database: `movienav`
 --
+CREATE DATABASE IF NOT EXISTS `movienav` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `movienav`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `favorites`
+--
+
+CREATE TABLE `favorites` (
+  `userID` int(11) NOT NULL,
+  `tmdbID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `favorites`
+--
+
+INSERT INTO `favorites` (`userID`, `tmdbID`) VALUES
+(16, 518764),
+(16, 991),
+(16, 62),
+(16, 62),
+(16, 62),
+(16, 62),
+(16, 62),
+(16, 62),
+(16, 62),
+(16, 13597);
 
 -- --------------------------------------------------------
 
@@ -76,10 +105,16 @@ CREATE TABLE `movies` (
 
 INSERT INTO `movies` (`tmdbID`, `title`, `overview`, `poster`) VALUES
 (13, 'Forrest Gump', 'A man with a low IQ has accomplished great things in his life and been present during significant historic events—in each case, far exceeding what anyone imagined he could do. But despite all he has achieved, his one true love eludes him.', '/clolk7rB5lAjs41SD0Vt6IXYLMm.jpg'),
+(62, '2001: A Space Odyssey', 'Humanity finds a mysterious object buried beneath the lunar surface and sets off to find its origins with the help of HAL 9000, the world\'s most advanced super computer.', '/zmmYdPa8Lxx999Af9vnVP4XQ1V6.jpg'),
+(671, 'Harry Potter and the Philosopher\'s Stone', 'Harry Potter has lived under the stairs at his aunt and uncle\'s house his whole life. But on his 11th birthday, he learns he\'s a powerful wizard -- with a place waiting for him at the Hogwarts School of Witchcraft and Wizardry. As he learns to harness his newfound powers with the help of the school\'s kindly headmaster, Harry uncovers the truth about his parents\' deaths -- and about the villain who\'s to blame.', '/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg'),
+(991, 'The Man Who Fell to Earth', 'Thomas Jerome Newton is an alien who has come to Earth in search of water to save his home planet. Aided by lawyer Oliver Farnsworth, Thomas uses his knowledge of advanced technology to create profitable inventions. While developing a method to transport water, Thomas meets Mary-Lou, a quiet hotel clerk, and begins to fall in love with her. Just as he is ready to leave Earth, Thomas is intercepted by the U.S. government, and his entire plan is threatened.', '/gwmPVphE5DMFFGXGMhfEFyxOOYj.jpg'),
+(11031, 'This Is Spinal Tap', '', '/z2LA8eBTSuuPC4NBhIZRNIwpimH.jpg'),
+(13597, 'Labyrinth', 'When teen Sarah is forced to babysit Toby, her baby stepbrother, she summons Jareth the Goblin King to take him away. When he is actually kidnapped, Sarah is given just thirteen hours to solve a labyrinth and rescue him.', '/AdWRVEkLV9RlUK8tREclkIIOfjT.jpg'),
 (24428, 'The Avengers', 'When an unexpected enemy emerges and threatens global safety and security, Nick Fury, director of the international peacekeeping agency known as S.H.I.E.L.D., finds himself in need of a team to pull the world back from the brink of disaster. Spanning the globe, a daring recruitment effort begins!', '/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg'),
 (75624, 'Naruto Shippuden the Movie: Blood Prison', 'After his capture for attempted assassination of the Raikage, leader of Kumogakure, as well as killing Jōnin from Kirigakure and Iwagakure, Naruto is imprisoned in Hōzukijou: A criminal containment facility known as the Blood Prison. Mui, the castle master, uses the ultimate imprisonment technique to steal power from the prisoners, which is when Naruto notices his life has been targeted. Thus begins the battle to uncover the truth behind the mysterious murders and prove Naruto\'s innocence.', '/4WT7zYFpe0fsbg6TitppiHddWAh.jpg'),
 (109445, 'Frozen', 'Young princess Anna of Arendelle dreams about finding true love at her sister Elsa’s coronation. Fate takes her on a dangerous journey in an attempt to end the eternal winter that has fallen over the kingdom. She\'s accompanied by ice delivery man Kristoff, his reindeer Sven, and snowman Olaf. On an adventure where she will find out what friendship, courage, family, and true love really means.', '/kgwjIb2JDHRhNk13lmSxiClFjVk.jpg'),
 (157336, 'Interstellar', 'The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.', '/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg'),
+(246403, 'Tusk', 'When his best friend and podcast co-host goes missing in the backwoods of Canada, a young guy joins forces with his friend\'s girlfriend to search for him.', '/pA2SgITmH0lzet9Nn5cxeinRKMv.jpg'),
 (268896, 'Pacific Rim: Uprising', 'It has been ten years since The Battle of the Breach and the oceans are still, but restless. Vindicated by the victory at the Breach, the Jaeger program has evolved into the most powerful global defense force in human history. The PPDC now calls upon the best and brightest to rise up and become the next generation of heroes when the Kaiju threat returns.', '/v5HlmJK9bdeHxN2QhaFP1ivjX3U.jpg'),
 (290859, 'Terminator: Dark Fate', 'Decades after Sarah Connor prevented Judgment Day, a lethal new Terminator is sent to eliminate the future leader of the resistance. In a fight to save mankind, battle-hardened Sarah Connor teams up with an unexpected ally and an enhanced super soldier to stop the deadliest Terminator yet.', '/vqzNJRH4YyquRiWxCCOH0aXggHI.jpg'),
 (359724, 'Ford v Ferrari', 'American car designer Carroll Shelby and the British-born driver Ken Miles work together to battle corporate interference, the laws of physics, and their own personal demons to build a revolutionary race car for Ford Motor Company and take on the dominating race cars of Enzo Ferrari at the 24 Hours of Le Mans in France in 1966.', '/6ApDtO7xaWAfPqfi2IARXIzj8QS.jpg'),
@@ -94,9 +129,11 @@ INSERT INTO `movies` (`tmdbID`, `title`, `overview`, `poster`) VALUES
 (464052, 'Wonder Woman 1984', 'Wonder Woman comes into conflict with the Soviet Union during the Cold War in the 1980s and finds a formidable foe by the name of the Cheetah.', '/di1bCAfGoJ0BzNEavLsPyxQ2AaB.jpg'),
 (479259, 'Lost Girls & Love Hotels', 'Searching for escape in Tokyo\'s back alleys, a haunted English teacher explores love and lust with a dashing Yakuza, as their tumultuous affair takes her on a journey through the city\'s dive bars and three-hour love hotels.', '/vQgXwuJrlpzGDI8169tRQRy71Nv.jpg'),
 (496243, 'Parasite', 'All unemployed, Ki-taek\'s family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.', '/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg'),
+(518764, 'Animal World', 'Drifting aimlessly through life, Kaisi (Li Yi Feng) has racked up debts of several million having borrowed money from his friends. Lured with the promise of writing it all off, Kaisi leaves his ailing mother and childhood sweetheart Qing (Zhou Dongyu) to board the ship Destiny and attend a gambling party controlled by the mysterious Anderson (Michael Douglas).  All players join the game with stars. For each game they lose, their opponent captures a star. Everyone is holding daggers behind their backs plotting dirty means by which to overcome their opponents. The game quickly deteriorates into a slaughter and Kaisi must battle save his own skin…', '/kxc25B05Gq4CbCoWbyTFf9iF0wn.jpg'),
 (520725, 'The Lost Prince', 'Djibi lives alone with Sofia, his 8-year-old daughter. Every night, he invents a story to put him to sleep. When Sofia falls asleep, these extraordinary stories come to life somewhere in an imaginary world inhabited by knights, pirates and other dragons. In this world that belongs only to them, Sofia is always the princess to save, and the brave Prince is none other than Djibi himself.  But 3 years later, the entry of Sofia to the college will mark the end of her childhood. To the despair of her father, she no longer needs her stories at night. On the one hand, Djibi will have to accept that his daughter will grow up and move away from him. On the other hand, in the World of Stories, the Prince will have to face the most epic of all his adventures. Find your destiny in a world where it no longer has a place.', '/iFcSfoMu9hQIX4t0CxIkDJKgIES.jpg'),
 (528085, '2067', 'A lowly utility worker is called to the future by a mysterious radio signal, he must leave his dying wife to embark on a journey that will force him to face his deepest fears in an attempt to change the fabric of reality and save humankind from its greatest environmental crisis yet.', '/7D430eqZj8y3oVkLFfsWXGRcpEG.jpg'),
 (530915, '1917', 'At the height of the First World War, two young British soldiers must cross enemy territory and deliver a message that will stop a deadly attack on hundreds of soldiers.', '/iZf0KyrE25z1sage4SYFLCCrMi9.jpg'),
+(531299, 'Kill Chain', 'A hotel room shootout between two assassins kicks off a long night where bodies fall like dominoes, as we follow a chain of crooked cops, gangsters, hitmen, a femme Fatale and an ex-mercenary through a relay of murder, betrayal, revenge and redemption.', '/wy0Xs5mGtD92PyKvsl0lxzbzscG.jpg'),
 (531876, 'The Outpost', 'A small unit of U.S. soldiers, alone at the remote Combat Outpost Keating, located deep in the valley of three mountains in Afghanistan, battles to defend against an overwhelming force of Taliban fighters in a coordinated attack. The Battle of Kamdesh, as it was known, was the bloodiest American engagement of the Afghan War in 2009 and Bravo Troop 3-61 CAV became one of the most decorated units of the 19-year conflict.', '/hPkqY2EMqWUnFEoedukilIUieVG.jpg'),
 (550440, 'Timmy Failure: Mistakes Were Made', 'An 11-year old boy believes that he is the best detective in town and runs the agency Total Failures with his best friend, an imaginary 1,200 pound polar bear.', '/9Ic99kyJewgPHwl4JftJSwzUmtD.jpg'),
 (552687, 'Wotakoi: Love is Hard for Otaku', 'An effervescent musical about one of the most unlikely couples seen on screen: two Otaku intent on hiding their nerdiness from their colleagues!', '/9JV0LOcazudqEcz2NNOMqEIzACz.jpg'),
@@ -104,11 +141,13 @@ INSERT INTO `movies` (`tmdbID`, `title`, `overview`, `poster`) VALUES
 (575417, 'On the Rocks', 'Faced with sudden doubts about her marriage, a young New York mother teams up with her larger-than-life playboy father to tail her husband.', '/fcijRCmB7yTtloh4Pumy9b1rkwU.jpg'),
 (576393, 'Fall in Love at First Kiss', 'After an earthquake destroys Xiang Qin\'s house, she and her father move in with the family of her father\'s college buddy. To her surprise, her new kind and amicable aunt and uncle are the parents of her cold and distant schoolmate, Jiang Zhi Shu, a genius with an IQ of 200 whom not too long ago rejected her when she confessed her feelings for him. Will the close proximity give her a second chance to win Zhi Shu\'s heart? Or will her love for him end under his cold words?', '/nMNVfz2bmcgj9Du0wywVHjbRIsz.jpg'),
 (577922, 'Tenet', 'Armed with only one word - Tenet - and fighting for the survival of the entire world, the Protagonist journeys through a twilight world of international espionage on a mission that will unfold in something beyond real time.', '/k68nPLbIST6NP96JmTxmZijEvCA.jpg'),
+(594718, 'Sputnik', 'At the height of the Cold War, a Soviet spacecraft crash lands after a mission gone awry, leaving the commander as its only survivor. After a renowned Russian psychologist is brought in to evaluate the commander’s mental state, it becomes clear that something dangerous may have come back to Earth with him…', '/eAUzmhP54bE1vPXaY7FbuZREJlR.jpg'),
 (604578, 'Spontaneous', 'When students in their high school begin inexplicably exploding (literally), seniors Mara and Dylan struggle to survive in a world where each moment may be their last.', '/tewRFdur9P7P5yk9FQJPwSTR55t.jpg'),
 (618353, 'Batman: Death in the Family', 'Tragedy strikes the Batman\'s life again when Robin Jason Todd tracks down his birth mother only to run afoul of the Joker. An adaptation of the 1988 comic book storyline of the same name.', '/k8Q9ulyRE8fkvZMkAM9LPYMKctb.jpg'),
 (622855, 'Jingle Jangle: A Christmas Journey', 'An imaginary world comes to life in a holiday tale of an eccentric toymaker, his adventurous granddaughter, and a magical invention that has the power to change their lives forever.', '/5RbyHIVydD3Krmec1LlUV7rRjet.jpg'),
 (627290, 'Antebellum', 'Successful author Veronica finds herself trapped in a horrifying reality and must uncover the mind-bending mystery before it\'s too late.', '/irkse1FMm9dWemwlxKJ7RINT9Iy.jpg'),
 (630566, 'Clouds', 'Young musician Zach Sobiech discovers his cancer has spread, leaving him just a few months to live. With limited time, he follows his dream and makes an album, unaware that it will soon be a viral music phenomenon.', '/2YvT3pdGngzpbAuxamTz4ZlabnT.jpg'),
+(634524, 'Badland', 'Detective Matthias Breecher, hired to track down the worst of the Confederate war criminals, roams the Old West seeking justice. His resolve is tested when he meets a determined pioneer woman who is far more than she seems.', '/217ddlMrnXll436baw7y5ERmz3x.jpg'),
 (689249, 'Money Heist: The Phenomenon', 'A documentary on why and how \'Money Heist\' sparked a wave of enthusiasm around the world for a lovable group of thieves and their professor.', '/AboUXTrDWEi0PuZUqaft0iwBTm7.jpg'),
 (698410, 'Adventures of Rufus: The Fantastic Pet', 'At his grandmother\'s house, Scott and his friend Emily meet Rufus, a swashbuckling, furry creature who begs them to help restore his fading kingdom. Wizard Abbott\'s spell book contains the magic healing formula--but Abbott\'s ancient nemesis Lilith, posing as Grandmother\'s servant, wants the book, too! In this hilarious, high-flying family adventure, Scott and Emily must confront a gigantic alligator, a vicious dinosaur skeleton, a ruthless owl, and a fire-breathing dragon to rescue Rufus\' magical world.', '/hF5AFDTWEqECQEvqOsFG2FQ6DJM.jpg'),
 (704264, 'Primal: Tales of Savagery', 'Genndy Tartakovsky\'s Primal: Tales of Savagery features a caveman and a dinosaur on the brink of extinction. Bonded by tragedy, this unlikely friendship becomes the only hope of survival.', '/osBa5SDOCyk8DzLcy8Qa3bdwUXu.jpg'),
@@ -116,6 +155,7 @@ INSERT INTO `movies` (`tmdbID`, `title`, `overview`, `poster`) VALUES
 (726664, 'Fearless', 'A teen gamer is forced to level up to full-time babysitter when his favorite video game drops three superpowered infants from space into his backyard.', '/5oQJ6HeNGWnEtP9Qyt5IZjuKI7j.jpg'),
 (733491, 'They Live Inside Us', 'Seeking inspiration for a new writing project, a man spends Halloween night in a notoriously haunted house. He soon realizes he is living in his own horror story.', '/1GJLLFlUaPEok4y8TXk5erbryt9.jpg'),
 (738215, 'Barbie: Princess Adventure', 'With new friends in a new kingdom, Barbie learns what it means to be herself when she trades places with a royal lookalike in this musical adventure.', '/AwkmMTKJBAatbeAVhTwhcU3Pyp4.jpg'),
+(741067, 'Welcome to Sudden Death', 'Jesse Freeman is a former special forces officer and explosives expert now working a regular job as a security guard in a state-of-the-art basketball arena. Trouble erupts when a tech-savvy cadre of terrorists kidnap the team\'s owner and Jesse\'s daughter during opening night. Facing a ticking clock and impossible odds, it\'s up to Jesse to not only save them but also a full house of fans in this highly charged action thriller.', '/elZ6JCzSEvFOq4gNjNeZsnRFsvj.jpg'),
 (749336, 'Star Wars: Wrath of the Mandalorian', 'Years after the Clone Wars end, Darth Vader sends bounty hunter Boba Fett to Kashyyyk to track down the last of the Jedi. Fett, motivated by revenge for his father\'s death, proves effective - but he soon finds out a terrible truth about Vader while on the hunt that gives him a change of heart.', '/ksil1FjB7AfNk34LAti0636pyTd.jpg');
 
 -- --------------------------------------------------------
@@ -236,7 +276,30 @@ INSERT INTO `moviesgenres` (`movieID`, `genreID`) VALUES
 (400155, 35),
 (400155, 16),
 (385687, 28),
-(385687, 53);
+(385687, 53),
+(531299, 53),
+(741067, 28),
+(741067, 53),
+(741067, 12),
+(741067, 18),
+(594718, 878),
+(594718, 18),
+(594718, 27),
+(518764, 18),
+(518764, 28),
+(518764, 12),
+(518764, 53),
+(518764, 9648),
+(518764, 14),
+(13597, 12),
+(13597, 10751),
+(13597, 14),
+(991, 18),
+(991, 878),
+(62, 878),
+(62, 9648),
+(62, 12),
+(634524, 37);
 
 -- --------------------------------------------------------
 
@@ -278,7 +341,42 @@ INSERT INTO `ratings` (`ratingID`, `userID`, `tmdbID`, `ratingDate`, `rating`) V
 (442, 6, 622855, '2020-11-22', 9),
 (443, 6, 722603, '2020-11-22', 8),
 (444, 6, 400155, '2020-11-22', 8),
-(445, 6, 385687, '2020-11-22', 1);
+(445, 6, 385687, '2020-11-22', 1),
+(446, 6, 11031, '2020-11-23', 9),
+(447, 16, 246403, '2020-11-24', 10),
+(448, 16, 531299, '2020-11-24', 1),
+(449, 16, 671, '2020-11-24', 2),
+(450, 16, 741067, '2020-11-24', 5),
+(451, 16, 13597, '2020-11-25', 10),
+(452, 16, 991, '2020-11-25', 10),
+(453, 16, 531876, '2020-11-25', 1),
+(454, 16, 62, '2020-11-25', 10);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reviews`
+--
+
+CREATE TABLE `reviews` (
+  `reviewID` int(11) NOT NULL,
+  `userID` int(11) NOT NULL,
+  `tmdbID` int(11) NOT NULL,
+  `reviewDate` date NOT NULL DEFAULT current_timestamp(),
+  `review` varchar(1000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`reviewID`, `userID`, `tmdbID`, `reviewDate`, `review`) VALUES
+(1, 16, 671, '2020-11-24', 'Trash.'),
+(2, 16, 741067, '2020-11-24', 'Haven\'t actually seen this but I\'m reviewing it.'),
+(3, 16, 13597, '2020-11-25', 'I almost found myself rooting for the antagonist. How did he do that with the crystal ball!?'),
+(4, 16, 991, '2020-11-25', 'Don\'t remember much of this one... kind of like the recording of Ziggy Stardust'),
+(5, 16, 531876, '2020-11-25', '400 years after the destruction of the ring, Legolas makes imperial propaganda for the humans.'),
+(6, 16, 62, '2020-11-25', 'It\'s full of 10 stars');
 
 -- --------------------------------------------------------
 
@@ -302,7 +400,16 @@ INSERT INTO `userrelationships` (`userFirstID`, `userSecondID`, `type`) VALUES
 (1, 5, 'friends'),
 (2, 3, 'friends'),
 (2, 5, 'friends'),
-(6, 7, 'friends');
+(6, 7, 'friends'),
+(6, 8, 'pending2'),
+(6, 13, 'friends'),
+(6, 14, 'friends'),
+(6, 15, 'friends'),
+(6, 16, 'pending1'),
+(7, 13, 'pending1'),
+(7, 14, 'pending1'),
+(8, 13, 'pending1'),
+(9, 13, 'pending1');
 
 -- --------------------------------------------------------
 
@@ -326,11 +433,22 @@ INSERT INTO `users` (`userID`, `email`, `username`, `password`, `proPic`) VALUES
 (6, 'nluginbill@gmail.com', 'nluginbill', '$2y$10$BuC5M16gUVqCnl.pEaIe6eHq227HXIkxxIGhelV4jE1x7R/pmRb0W', './img/nluginbillunnamed.jpg'),
 (7, 'nluginbill2@gmail.com', 'nluginbill2', '$2y$10$zdU0zoHV2GCXx4uwbhCHeu5DvZpu18E/sPZtt.UFi5pvtwEknqhqu', './img/nluginbill2sprinter.jpg'),
 (8, 'nluginbill@yahoo.com', 'nluginbill3', '$2y$10$0xufwhFEMe/s9C342sK0xuOqBHYE3unEw8PzK4Sb9NWKyq18g.X02', './img/nluginbill3sprinter.jpg'),
-(9, 'nluginbill4@gmail.com', 'nluginbill4', '$2y$10$JT.iAHVKwZo11i9P8dp0ceGyq3NA830sJofk3svq2RZ9UVJnzOV8.', './img/nluginbill4sprinter.jpg');
+(9, 'nluginbill4@gmail.com', 'nluginbill4', '$2y$10$JT.iAHVKwZo11i9P8dp0ceGyq3NA830sJofk3svq2RZ9UVJnzOV8.', './img/nluginbill4sprinter.jpg'),
+(13, 'jsmith@aol.com', 'jsmith', '$2y$10$JN3NeYNAR4Hd18dzf704GeeJhQBLOMZQSkGq2NWJLstSuwBzTbgJ2', './img/jsmithmovieclubpropic.jpg'),
+(14, 'asmith@aol.com', 'asmith', '$2y$10$IF5xpsWB4IKdnR6OXe3Uve69dWTuin3h3ZRtTxC/dAY3JkpG1kyfu', './img/asmithmovieclubpropic.jpg'),
+(15, 'bsmith@aol.com', 'bsmith', '$2y$10$nZ6kzU/3dIo.5t4HHIlrHe8jnCLJudqhC2yZqLQ3626LJnxvdJjCm', './img/bsmithmovieclubpropic.jpg'),
+(16, 'dbowie@gmail.com', 'dbowie', '$2y$10$ZLk6DzWYy7gip/V6BsWcz./5MQR6m.zai7DD/ciz4XojFA4w7BC8u', './img/dbowiebowie.jpg');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `favorites`
+--
+ALTER TABLE `favorites`
+  ADD KEY `fk_favorites_users` (`userID`),
+  ADD KEY `fk_favorites_movies` (`tmdbID`);
 
 --
 -- Indexes for table `genres`
@@ -360,6 +478,14 @@ ALTER TABLE `ratings`
   ADD KEY `fkRatingsMovies` (`tmdbID`);
 
 --
+-- Indexes for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`reviewID`),
+  ADD KEY `fk_review_user` (`userID`),
+  ADD KEY `fk_review_movie` (`tmdbID`);
+
+--
 -- Indexes for table `userrelationships`
 --
 ALTER TABLE `userrelationships`
@@ -385,17 +511,30 @@ ALTER TABLE `movies`
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `ratingID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=446;
+  MODIFY `ratingID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=455;
+
+--
+-- AUTO_INCREMENT for table `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `reviewID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `favorites`
+--
+ALTER TABLE `favorites`
+  ADD CONSTRAINT `fk_favorites_movies` FOREIGN KEY (`tmdbID`) REFERENCES `movies` (`tmdbID`),
+  ADD CONSTRAINT `fk_favorites_users` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
 
 --
 -- Constraints for table `moviesgenres`
@@ -410,6 +549,13 @@ ALTER TABLE `moviesgenres`
 ALTER TABLE `ratings`
   ADD CONSTRAINT `fkRatingsMovies` FOREIGN KEY (`tmdbID`) REFERENCES `movies` (`tmdbID`),
   ADD CONSTRAINT `fkRatingsUsers` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
+
+--
+-- Constraints for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD CONSTRAINT `fk_review_movie` FOREIGN KEY (`tmdbID`) REFERENCES `movies` (`tmdbID`),
+  ADD CONSTRAINT `fk_review_user` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

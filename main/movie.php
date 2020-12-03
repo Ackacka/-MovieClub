@@ -62,7 +62,7 @@
                             <?php } ?>
                         </a>
 
-                        <a href="#" class="btn btn-outline-secondary float-right">Haven't seen</a>
+                        <a href="index.php?action=rater" class="btn btn-outline-secondary float-right">Haven't seen</a>
                     </form>
                 </div>
             </div>

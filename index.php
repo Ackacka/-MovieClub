@@ -283,7 +283,7 @@ switch ($action) {
         die();
         break;
     case "myRatingsPage":
-        $ratings = RatingDB::getUserMovieRatings($user);
+        $ratings = RatingDB::getUserMovieRatingsAndReviews($user);
         include './account/myRatingsPage.php';
         die();
         break;
@@ -329,17 +329,17 @@ switch ($action) {
         }
         //movie is not a movie object, but an array of TMDB results from the 
         //tmdbID
-        $movie = TmdbAPI::getMovie($movieID);
+        $movie = TmdbAPI::getMovie($tmdbID);
         $ratingsReviewsUsers = MovieDB::getMovieRatingsAndReviews($movie['id']);
         $userRating = false;
         $userReview = false;
 
         if (!is_null(RatingDB::getUserRatingByTmdbID($user, $tmdbID))) {
-            $rating = RatingDB::getUserRatingByTmdbID($user, $tmdbID);
+            $userRating = RatingDB::getUserRatingByTmdbID($user, $tmdbID);
         }
         if (!is_null(ReviewDB::getUserReviewByTmdbID($user, $tmdbID))) {
-            $review = ReviewDB::getUserReviewByTmdbID($user, $tmdbID);
-        }
+            $userReview = ReviewDB::getUserReviewByTmdbID($user, $tmdbID);
+        } 
         $favString = '';
         $isFavorite = FavoriteDB::findFavorite($user->getUserID(), $tmdbID);
         if ($isFavorite){
