@@ -2,7 +2,7 @@
 
 <div class="container">
     <div class="row">
-    <div class="card m-10 mx-auto" style="width: 30rem;">
+    <div class="card m-3 mx-auto" style="width: 30rem;">
         <img class="card-img-top p-5"   src="https://image.tmdb.org/t/p/w500<?php echo $movie['poster_path']; ?>" alt="poster">
         <div class="card-body">
             <a href="index.php?action=<?php echo $favString ?>&movie=<?php echo $movie['id'] ?>">

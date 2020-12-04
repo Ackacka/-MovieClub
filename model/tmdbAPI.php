@@ -23,7 +23,7 @@ class TmdbAPI {
         return $movie;
     }
 
-    public static function getTopPopular($number) {
+    public static function getTopPopular() {
         $ch = curl_init();
         $params = ['api_key' => 'ce996ee388766d7471956f7e323701ae',
             'language' => 'en-US',

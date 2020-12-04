@@ -1,6 +1,15 @@
 <?php include 'view/header.php'; ?>
 
 <div class="container">
+    
+    
+        <div class="col-sm-2">            
+            <img class="mt-3" src="<?php echo Middleware::xecho($user->getProPic()); ?>" style="width: 7rem">
+            <h4><?php echo Middleware::xecho($user->getUsername()); ?></h4>
+        </div>
+
+    
+
     <?php if (count($requestingUsers) > 0) { ?>
         <h4>You have friend requests:</h4>
         <?php for ($i = 0; $i < count($requestingUsers); $i++) { ?>
@@ -25,8 +34,8 @@
         <?php } ?>        
     <?php } ?>
     <?php if (isset($top3Genres)) { ?>
-        <div class="container">
-            <div class="col-sm board m-3 p-1">
+<!--        <div class="container">-->
+            <div class="col-sm board p-1">
                 <h4>Genres with the most ratings:</h4>
                 <ul>
                     <?php foreach ($top3Genres as $genre => $count) { ?>                    
@@ -34,7 +43,7 @@
                     <?php } ?>
                 </ul>
             </div>
-            </div>
+            <!--</div>-->
         <?php } ?>
     
 

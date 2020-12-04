@@ -12,23 +12,22 @@
 
 
     <body>
-
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarToggler">                    
-                <a class="navbar-brand" href="index.php?action=main"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-film m-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0h8v6H4V1zm8 8H4v6h8V9zM1 1h2v2H1V1zm2 3H1v2h2V4zM1 7h2v2H1V7zm2 3H1v2h2v-2zm-2 3h2v2H1v-2zM15 1h-2v2h2V1zm-2 3h2v2h-2V4zm2 3h-2v2h2V7zm-2 3h2v2h-2v-2zm2 3h-2v2h2v-2z"/>
-                    </svg>
-                    <b>Movie Club</b>
+                <a class="navbar-brand" href="index.php?action=main"><i class="fas fa-film"></i>
+                    <p style="display: inline"><b>Movie Club</b></p>
                 </a>
                 <form class="form-inline" method="post" action="index.php">
                     <input name="action" type="hidden" value="search">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search movies..." aria-label="Search" name="search">
                     <button class="btn btn-outline-success m-2 my-sm-0" type="submit">Search</button>
-                    <a href="index.php?action=rater"><button type="button" class="btn btn-outline-dark my-2 my-sm-0">Random Movie</button></a>
+                    <?php if ($username !== 'defaultUser') { ?>
+                        <a href="index.php?action=rater"><button type="button" class="btn btn-outline-dark my-2 my-sm-0">Random Movie</button></a>
+                    <?php } ?>
                 </form>
             </div>
             <?php if ($_SESSION['loginUser'] === 'defaultUser') { ?>
@@ -42,13 +41,12 @@
                     </li>      
                 </ul>    
             <?php } else { ?>
-                
+
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $user->getUsername() ?></a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="index.php?action=dashboard">Dashboard</a>
                             <a class="dropdown-item" href="index.php?action=showProfile&profileUser=<?php echo $user->getUsername() ?>">My Profile</a>
                             <a class="dropdown-item" href="index.php?action=editProfileForm">Edit Profile</a>
                             <a class="dropdown-item" href="index.php?action=searchUsersPage">Friends</a>
