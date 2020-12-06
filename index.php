@@ -103,6 +103,16 @@ switch ($action) {
     case "showProfile":
         $username = filter_input(INPUT_GET, 'profileUser');
         $profileUser = UserDB::getUserByUsername($username);
+        $usersArray = array($profileUser, $user);
+        $relationship = FriendshipDB::getRelationship($usersArray);
+        if ($relationship !== false){
+            $relationship = FriendshipDB::getRelationship($usersArray)['type'];
+        }
+        $profileUserRatings = false;
+        if($relationship === 'friends' || $user->getUsername() === $username){
+            $profileUserRatings = RatingDB::getUserRatingsAndReviews($profileUser);
+        }     
+        
 
         include './main/profile.php';
         die();
@@ -288,7 +298,7 @@ switch ($action) {
         die();
         break;
     case "myRatingsPage":
-        $ratings = RatingDB::getUserMovieRatingsAndReviews($user);
+        $ratings = RatingDB::getUserRatingsAndReviews($user);
         include './account/myRatingsPage.php';
         die();
         break;
@@ -387,7 +397,6 @@ switch ($action) {
         break;
     case "main":
         $movies = TmdbAPI::getTopPopular();
-        $bg = TmdbAPI::getRandomPopular();
         include './main/main.php';
         die();
         break;

@@ -124,7 +124,7 @@ class RatingDB {
         return $ratings;
     }
     
-    public static function getUserMovieRatingsAndReviews($user) {
+    public static function getUserRatingsAndReviews($user) {
         $db = Database::getDB();
 
         $query = 'SELECT r.ratingID, r.userID, r.tmdbID, r.ratingDate, r.rating,'
@@ -137,8 +137,6 @@ class RatingDB {
         $statement->execute();
         $rows = $statement->fetchAll();
         $statement->closeCursor();
-        $ratings = array();
-        $reviews = array();
         $ratingsAndReviews = array();
         foreach ($rows as $row) {
             $movie = MovieDB::getMovie($row['tmdbID']);

@@ -48,8 +48,9 @@ body {
     background-color: slateblue;
 }
 
-.reviewBlurb {
-    border-radius: 4px;
+.reviewText {
+    overflow: auto;
+    word-wrap: break-word;
 }
 
 #carousel {

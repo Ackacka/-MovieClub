@@ -89,10 +89,10 @@
                 <?php if (!empty($ratingsReviewsUsers)) { ?>
                     <?php foreach ($ratingsReviewsUsers as $rru) { ?>
                         <div class="row">
-                            <div class="col">
-                                <img class="m-1 reviewBlurb" src="<?php echo Middleware::xecho($rru['user']->getProPic()); ?>" style="width: 5rem">
+                            <div class="col-sm-4">
+                                <img class="p-1" src="<?php echo Middleware::xecho($rru['user']->getProPic()); ?>" style="width: 100%">
                             </div>
-                            <div class="col-8">
+                            <div class="col-sm-6">
                                 <div class="row">
                                     <p><em><?php echo Middleware::xecho($rru['review']->getReview()); ?></em></p>
                                     <p>&nbsp;  - <?php echo Middleware::xecho($rru['user']->getUsername()); ?></p>
@@ -106,7 +106,6 @@
                                         <span><i class="far fa-star"></i></span>
                                     <?php } ?>
                                 </div>
-
                             </div>
                         </div>
                     <?php } ?>
