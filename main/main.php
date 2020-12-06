@@ -2,10 +2,10 @@
 
 <div class="container">
     <div class="jumbotron m-3">
-        <h1 class="display-4">Welcome to the Video Club<?php if ($username !== 'defaultUser') echo ', ' . $user->getUsername() ?>!</h1>
+        <h1 class="display-4">Welcome to the Video Club<?php if ($_SESSION['loginUser'] !== 'defaultUser') echo ', ' . $user->getUsername() ?>!</h1>
         <p class="lead">Track your taste in cinema, and share it with your friends!</p>
         
-        <?php if ($username === 'defaultUser') { ?>
+        <?php if ($_SESSION['loginUser'] === 'defaultUser') { ?>
             <hr class="my-4">
             <p>Get started by making an account.</p>
             <p class="lead">

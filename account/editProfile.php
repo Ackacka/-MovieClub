@@ -8,7 +8,7 @@
 
     <label for="username">Username:</label>
 
-    <input type="text" id="username" value="<?php if($username !== 'defaultUser') echo htmlspecialchars($username); ?>" placeholder="Enter Username" name="username"/>
+    <input type="text" id="username" value="<?php if($_SESSION['loginUser'] !== 'defaultUser') echo htmlspecialchars($_SESSION['loginUser']); ?>" placeholder="Enter Username" name="username"/>
     <span class="errorMsg"> <?php echo htmlspecialchars($usernameError) ?></span>
     <br>
     

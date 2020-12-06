@@ -1,12 +1,19 @@
 body, html {
     height: 100%;
 }
+
+hr {
+    color: yellow;
+}
+
 .carousel,.item,.active{
    height:100%;
  }
 .carousel-inner{
     height:100%;
 }
+
+
 
 .activeStar{
     color: orange;

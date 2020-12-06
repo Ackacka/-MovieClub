@@ -9,7 +9,7 @@
                 <img class="card-img-top" src="https://image.tmdb.org/t/p/w500<?php echo $movie['poster_path']; ?>" alt="poster">
                 <div class="card-body">
 
-                    <?php if ($username !== 'defaultUser') { ?>
+                    <?php if ($_SESSION['loginUser'] !== 'defaultUser') { ?>
                         <a href="index.php?action=<?php echo $favString ?>&movie=<?php echo $movie['id'] ?>">
                             <i class="fas fa-heart fa-3x heart float-right <?php echo $favString ?>">
                             </i>
@@ -22,7 +22,7 @@
                         </em></p>
                     <p class="card-text"><?php echo $movie['overview']; ?></p>
                 </div>
-                <?php if ($username !== 'defaultUser') { ?>
+                <?php if ($_SESSION['loginUser'] !== 'defaultUser') { ?>
                     <?php if ($userReview !== false) { ?>
                         <div class="card-body">
                             <h6>Your review:</h6>
@@ -46,7 +46,7 @@
                             </div>
 
 
-                            <?php if ($username !== 'defaultUser') { ?>
+                            <?php if ($_SESSION['loginUser'] !== 'defaultUser') { ?>
 
                             <?php } ?>
                             <select id="ddRating" name="rating">

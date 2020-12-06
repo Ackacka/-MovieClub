@@ -31,7 +31,8 @@
                 </div>
 
             </div>
-        <?php } ?>        
+        <?php } ?>
+        <hr />
     <?php } ?>
     <?php if (!empty($top3Genres)) { ?>
 <!--        <div class="container">-->

@@ -38,15 +38,13 @@ if ($action === null) {
     }
 }
 
-$username = $_SESSION['loginUser'];
+
 $user;
-if ($username !== 'defaultUser') {
-    $user = UserDB::getUserByUsername($username);
+if ($_SESSION['loginUser'] !== 'defaultUser') {
+    $user = UserDB::getUserByUsername($_SESSION['loginUser']);
 }
 
 $makeSecret = 'ce996ee388766d7471956f7e323701ae';
-$tmdbAuth = 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZTk5NmVlMzg4NzY2ZDc0NzE5NTZmN2UzMjM3MDFhZSIsInN1YiI6IjVmOThhZWIwMTc3OTJjMDAzNjNkZTRjNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ITM03gfoEx96OQWrhtFVecgSP3HiqlD80MbD4tOHncI';
-
 
 switch ($action) {
     case "unfavorite":
@@ -106,7 +104,7 @@ switch ($action) {
         $username = filter_input(INPUT_GET, 'profileUser');
         $profileUser = UserDB::getUserByUsername($username);
 
-        include './account/profile.php';
+        include './main/profile.php';
         die();
         break;
     case "editProfileForm":
@@ -270,7 +268,7 @@ switch ($action) {
         $userRating = false;
         $userReview = false;
 
-        if ($username !== 'defaultUser') {
+        if ($_SESSION['loginUser'] !== 'defaultUser') {
             if (!is_null(RatingDB::getUserRatingByTmdbID($user, $movieID))) {
                 $userRating = RatingDB::getUserRatingByTmdbID($user, $movieID);
             }
@@ -531,7 +529,6 @@ switch ($action) {
     case "logOut":
         session_destroy();
         $_SESSION['loginUser'] = 'defaultUser';
-        $username = $_SESSION['loginUser'];
         $movies = TmdbAPI::getTopPopular();
         include "./main/main.php";
         die();

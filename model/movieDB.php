@@ -84,7 +84,7 @@ class MovieDB {
                 . 'FROM ratings ra '
                 . 'LEFT OUTER JOIN reviews re '
                 . 'ON ra.tmdbID = re.tmdbID '
-                . 'WHERE ra.tmdbID = 493922 '
+                . 'WHERE ra.tmdbID = :tmdbID '
                 . 'AND ra.userID = re.userID';
         $statement = $db->prepare($query);
         $statement->bindValue(":tmdbID", $tmdbID);
