@@ -25,7 +25,7 @@
                     <input name="action" type="hidden" value="search">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search movies..." aria-label="Search" name="search">
                     <button class="btn btn-outline-success m-2 my-sm-0" type="submit">Search</button>
-                    <?php if ($username !== 'defaultUser') { ?>
+                    <?php if ($_SESSION['loginUser'] !== 'defaultUser') { ?>
                         <a href="index.php?action=rater"><button type="button" class="btn btn-outline-dark my-2 my-sm-0">Random Movie</button></a>
                     <?php } ?>
                 </form>
