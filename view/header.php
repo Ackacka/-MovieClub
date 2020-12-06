@@ -47,6 +47,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $user->getUsername() ?></a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="index.php?action=dashboard">Dashboard</a>
                             <a class="dropdown-item" href="index.php?action=showProfile&profileUser=<?php echo $user->getUsername() ?>">My Profile</a>
                             <a class="dropdown-item" href="index.php?action=editProfileForm">Edit Profile</a>
                             <a class="dropdown-item" href="index.php?action=searchUsersPage">Friends</a>

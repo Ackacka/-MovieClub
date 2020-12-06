@@ -33,7 +33,7 @@
             </div>
         <?php } ?>        
     <?php } ?>
-    <?php if (isset($top3Genres)) { ?>
+    <?php if (!empty($top3Genres)) { ?>
 <!--        <div class="container">-->
             <div class="col-sm board p-1">
                 <h4>Genres with the most ratings:</h4>

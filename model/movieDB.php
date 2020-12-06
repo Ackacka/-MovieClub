@@ -79,10 +79,13 @@ class MovieDB {
     //ratings and reviews come back with dummy movie objects.
     public static function getMovieRatingsAndReviews($tmdbID){
         $db = Database::getDB();
-        $query = 'SELECT * FROM ratings ra
-                  LEFT OUTER JOIN reviews re
-                  ON ra.tmdbID = re.tmdbID
-                  WHERE ra.tmdbID = :tmdbID';
+        $query = 'SELECT ra.ratingID, ra.userID, ra.tmdbID, ra.ratingDate,'
+                . ' ra.rating, re.userID, re.reviewDate, re.reviewID, re.review '
+                . 'FROM ratings ra '
+                . 'LEFT OUTER JOIN reviews re '
+                . 'ON ra.tmdbID = re.tmdbID '
+                . 'WHERE ra.tmdbID = 493922 '
+                . 'AND ra.userID = re.userID';
         $statement = $db->prepare($query);
         $statement->bindValue(":tmdbID", $tmdbID);
         $statement->execute();
@@ -103,8 +106,10 @@ class MovieDB {
             $user = UserDB::getUser($row['userID']);
             $user->setPassword('');
             $rating = new Rating($row['userID'], $row['tmdbID'], $row['rating'], "");
+            $rating->setRatingID($row['ratingID']);
             $rating->setRatingDate(date_create($row['ratingDate']));
             $review = new Review($row['userID'], $row['tmdbID'], $row['review'], "");
+            $review->setReviewID($row['reviewID']);
             $review->setReviewDate(date_create($row['reviewDate']));
             $ratingReviewUser['rating'] = $rating;
             $ratingReviewUser['review'] = $review;

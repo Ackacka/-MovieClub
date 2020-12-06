@@ -1,5 +1,6 @@
 <?php include 'view/header.php'; ?>
 
+<?php // var_dump($ratingsReviewsUsers); ?>
 
 <div class="container">
     <div class="row">

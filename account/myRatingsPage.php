@@ -1,12 +1,10 @@
 <?php include 'view/header.php'; ?>
 
-
-
 <div class="container">
-    <?php if (is_null($ratings)) { ?>
+    <?php if (empty($ratings)) { ?>
         <div class="row">
-            <div class="col-sm mx-auto">
-                <h4>Go rate some movies!</h4>
+            <div class="col-sm mx-auto p-3">
+                <h3>Go rate some movies!</h3>
             </div>
         </div>
     <?php } else { ?>
