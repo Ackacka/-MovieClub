@@ -105,13 +105,28 @@ switch ($action) {
         $profileUser = UserDB::getUserByUsername($username);
         $usersArray = array($profileUser, $user);
         $relationship = FriendshipDB::getRelationship($usersArray);
+        $sameFavs = array();
+        $randSameFav = false;
+        $sameFavMovie = false;
         if ($relationship !== false){
             $relationship = FriendshipDB::getRelationship($usersArray)['type'];
         }
         $profileUserRatings = false;
         if($relationship === 'friends' || $user->getUsername() === $username){
             $profileUserRatings = RatingDB::getUserRatingsAndReviews($profileUser);
-        }     
+        }
+        if($relationship === 'friends') {
+            $userFavs = FavoriteDB::getUserFavorites($user->getUserID());
+            $profileUserFavs = FavoriteDB::getUserFavorites($profileUser->getUserID());
+            foreach($userFavs as $fav) {
+                if(in_array($fav, $profileUserFavs)){
+                    array_push($sameFavs, $fav);
+                }
+            }
+            $randSameFav = $sameFavs[rand(0, count($sameFavs) - 1)];
+            
+            $sameFavMovie = MovieDB::getMovie($randSameFav);
+        }
         
 
         include './main/profile.php';

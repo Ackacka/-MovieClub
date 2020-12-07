@@ -1,18 +1,46 @@
 <?php include 'view/header.php'; ?>
 
+
+<?php var_dump($randSameFav); ?>
+
 <div class="container">
+
     <div class="row">
         <div class="col-sm">            
             <img class="mt-3" src="<?php echo Middleware::xecho($profileUser->getProPic()); ?>" style="width: 7rem">
             <h4><?php echo Middleware::xecho($profileUser->getUsername()); ?></h4>
             <h5><span class="badge badge-success"><?php echo $relationship ?></span></h5>
         </div>
-    </div>
 
+
+
+    </div>
+    <?php if ($relationship === 'friends') { ?>                
+        <?php if (count($sameFavs) > 0) { ?>
+            <hr>
+            <h3 style='display: inline'>You share <?php echo count($sameFavs) ?> favorite movie
+                <?php if (count($sameFavs) > 1) echo 's'; ?>...
+            </h3>
+            
+        <?php } ?>                
+    <?php } ?>
+    <div class="row justify-content-center">
+
+        <br>
+        <a href="index.php?action=viewMovie&movie=<?php echo $sameFavMovie->getTmdbID(); ?>">
+            <img class="searchThumb" src="https://image.tmdb.org/t/p/w185<?php echo $sameFavMovie->getPoster(); ?>">
+        </a><br />
+
+    </div>
+    <div class="row justify-content-center">     
+        <p class='lightgrey'><em><?php echo $sameFavMovie->getTitle() ?></em> is one of them</p>
+        
+    </div>
     <?php if (!empty($profileUserRatings)) { ?>
-        <?php for ($i = 0; $i < count($profileUserRatings); $i++) { ?>
-            <hr />
-            <h3><?php echo $profileUser->getUsername() ?>'s reviews:</h3>
+        <h3><?php echo $profileUser->getUsername() ?>'s reviews:</h3>
+
+        <?php for ($i = 0; $i < count($profileUserRatings); $i++) { ?>  
+            <hr />  
             <div class="row m-1 board">
                 <div class="col-sm-3 m-3 p-2">
                     <h4><?php echo $profileUserRatings[$i]['rating']->getMovie()->getTitle() ?></h4>

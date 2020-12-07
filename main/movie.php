@@ -1,7 +1,5 @@
 <?php include 'view/header.php'; ?>
 
-<?php // var_dump($ratingsReviewsUsers); ?>
-
 <div class="container">
     <div class="row">
         <div class="col-sm-8 m-1">
@@ -90,7 +88,9 @@
                     <?php foreach ($ratingsReviewsUsers as $rru) { ?>
                         <div class="row">
                             <div class="col-sm-4">
-                                <img class="p-1" src="<?php echo Middleware::xecho($rru['user']->getProPic()); ?>" style="width: 100%">
+                                <a href="index.php?action=showProfile&profileUser=<?php echo Middleware::xecho($rru['user']->getUsername()); ?>">
+                                    <img class="p-1" src="<?php echo Middleware::xecho($rru['user']->getProPic()); ?>" style="width: 100%">
+                                </a>
                             </div>
                             <div class="col-sm-6">
                                 <div class="row">

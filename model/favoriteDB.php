@@ -71,9 +71,22 @@ class FavoriteDB {
         }
         return true;
     }
-    
-    public static function getUserFavorites($user){
-        //next commit
-    }
 
+    public static function getUserFavorites($userID){
+        $db = Database::getDB();
+        $query = 'SELECT * FROM favorites
+                WHERE userID = :userID';
+        $statement = $db->prepare($query);
+        $statement->bindValue(":userID", $userID);
+        $statement->execute();
+        $rows = $statement->fetchAll();
+        $statement->closeCursor();        
+        
+        $favorites = array();
+        foreach($rows as $row) {
+            array_push($favorites, $row['tmdbID']);
+        }
+        
+        return $favorites;
+    }
 }
