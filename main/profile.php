@@ -1,8 +1,5 @@
 <?php include 'view/header.php'; ?>
 
-
-<?php var_dump($randSameFav); ?>
-
 <div class="container">
 
     <div class="row">
@@ -21,21 +18,21 @@
             <h3 style='display: inline'>You share <?php echo count($sameFavs) ?> favorite movie
                 <?php if (count($sameFavs) > 1) echo 's'; ?>...
             </h3>
-            
+            <div class="row justify-content-center">
+
+                <br>
+                <a href="index.php?action=viewMovie&movie=<?php echo $sameFavMovie->getTmdbID(); ?>">
+                    <img class="searchThumb" src="https://image.tmdb.org/t/p/w185<?php echo $sameFavMovie->getPoster(); ?>">
+                </a><br />
+
+            </div>
+            <div class="row justify-content-center">     
+                <p class='lightgrey'><em><?php echo $sameFavMovie->getTitle() ?></em> is one of them</p>
+
+            </div>
         <?php } ?>                
     <?php } ?>
-    <div class="row justify-content-center">
 
-        <br>
-        <a href="index.php?action=viewMovie&movie=<?php echo $sameFavMovie->getTmdbID(); ?>">
-            <img class="searchThumb" src="https://image.tmdb.org/t/p/w185<?php echo $sameFavMovie->getPoster(); ?>">
-        </a><br />
-
-    </div>
-    <div class="row justify-content-center">     
-        <p class='lightgrey'><em><?php echo $sameFavMovie->getTitle() ?></em> is one of them</p>
-        
-    </div>
     <?php if (!empty($profileUserRatings)) { ?>
         <h3><?php echo $profileUser->getUsername() ?>'s reviews:</h3>
 
