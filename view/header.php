@@ -51,6 +51,7 @@
                             <a class="dropdown-item" href="index.php?action=showProfile&profileUser=<?php echo $user->getUsername() ?>">My Profile</a>
                             <a class="dropdown-item" href="index.php?action=editProfileForm">Edit Profile</a>
                             <a class="dropdown-item" href="index.php?action=searchUsersPage">Friends</a>
+                            <a class="dropdown-item" href="index.php?action=recommender">What to watch</a>
                             <a class="dropdown-item" href="index.php?action=rater">Rate Movies</a>
                             <a class="dropdown-item" href="index.php?action=myRatingsPage">My Ratings</a>
                             <a class="dropdown-item" href="index.php?action=logOut">Log Out</a>

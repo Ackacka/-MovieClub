@@ -47,6 +47,52 @@ if ($_SESSION['loginUser'] !== 'defaultUser') {
 $makeSecret = 'ce996ee388766d7471956f7e323701ae';
 
 switch ($action) {
+    case "recommender":
+        $userFavs = FavoriteDB::getUserFavorites($user->getUserID());
+        $randFav = $userFavs[rand(0, count($userFavs) - 1)];
+        $recommendations = TmdbAPI::getRecommendations($randFav);
+        if (!isset($rating)) {
+            $rating = 0;
+        }
+
+        $userRatings = RatingDB::getUserMovieRatings($user);
+
+        $nonoIDs = array();
+        if (!is_null($userRatings)) {
+            foreach ($userRatings as $rating) {
+                array_push($nonoIDs, $rating->getTmdbID());
+            }
+        }
+
+        //get the movie to recommend by taking a random one from the array of
+        //recommendations from the API. If the attempt to find a random movie in
+        //this array that the viewer hasn't rated fails 20 times, then it simply
+        //chooses a random popular movie to recommend. Hacked together I know!
+        $movie = array();
+        $i = 0;
+        do {
+            $movie = $recommendations[rand( 0, count($recommendations) - 1)];
+            $i++;
+        } while (in_array($movie['id'], $nonoIDs) && $i < 20 );
+        
+        if(in_array($movie['id'], $nonoIDs)){
+            $movie = TmdbAPI::getRandomPopular();
+        }
+
+         
+        //let view know whether movie is the user's favorite
+        $favString = '';
+        $isFavorite = FavoriteDB::findFavorite($user->getUserID(), $movie['id']);
+        if ($isFavorite) {
+            $favString = 'unfavorite';
+        } else {
+            $favString = 'favorite';
+        }
+       
+        
+        include './account/recommender.php';
+        die();
+        break;
     case "deleteReview":
         $reviewID = filter_input(INPUT_POST, 'reviewID', FILTER_VALIDATE_INT);
         $movieID = filter_input(INPUT_POST, 'movieID');
@@ -573,7 +619,7 @@ switch ($action) {
 
             $_SESSION['loginUser'] = $username;
             $user = UserDB::getUserByUsername($username);
-            $ratings = RatingDB::getUserMovieRatings($user);
+            $movies = TmdbAPI::getTopPopular();
             include './main/main.php';
             die();
         }

@@ -76,5 +76,22 @@ class TmdbAPI {
         curl_close($ch);
         return $searchResults;
     }
+    
+    public static function getRecommendations($randFav){
+        $ch = curl_init();
+        $params = ['api_key' => 'ce996ee388766d7471956f7e323701ae',
+            'language' => 'en-US',
+            'page' => 1];
+        $endpoint = "https://api.themoviedb.org/3/movie/" . $randFav . "/recommendations";
+        $url = $endpoint . '?' . http_build_query($params);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $recommendations = json_decode($response, true);
+        $recommendations = $recommendations['results'];
+        curl_close($ch);
+        return $recommendations;
+    }
 
 }
