@@ -117,4 +117,20 @@ class reviewDB {
 
         return $reviews;
     }
+    
+    public static function deleteReview($reviewID){
+        $db = Database::getDB();
+        try {
+            $query = 'DELETE FROM reviews '
+                    . 'WHERE reviewID = :reviewID';
+            $statement = $db->prepare($query);
+            $statement->bindValue(':reviewID', $reviewID);
+            $statement->execute();
+            $statement->closeCursor();
+        } catch (PDOException $e) {
+            $error_message = $e->getMessage();
+            include("index.php");
+            exit();
+        }
+    }
 }

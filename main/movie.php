@@ -1,5 +1,7 @@
 <?php include 'view/header.php'; ?>
 
+<?php // var_dump($ratingsReviewsUsers) ?>
+
 <div class="container">
     <div class="row">
         <div class="col-sm-8 m-1">
@@ -106,6 +108,16 @@
                                         <span><i class="far fa-star"></i></span>
                                     <?php } ?>
                                 </div>
+                                <?php if ($user->getUsername() === 'nluginbill' || $rru['user']->getUsername() === $_SESSION['loginUser']) { ?>
+                                    <form method="post" action="index.php">
+                                        <input type="hidden" name="action" value="deleteReview">
+                                        <input type="hidden" name="movieID" value="<?php echo $movie['id'] ?>">
+                                        <input type="hidden" name="reviewID" value="<?php echo $rru['review']->getReviewID() ?>">
+                                        <div class="d-flex flex-row-reverse">
+                                            <input class="btn btn-danger btn-sm m-1" type="submit" value="Delete">
+                                        </div>
+                                    </form>
+                                <?php } ?>
                             </div>
                         </div>
                     <?php } ?>

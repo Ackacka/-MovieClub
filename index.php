@@ -47,6 +47,34 @@ if ($_SESSION['loginUser'] !== 'defaultUser') {
 $makeSecret = 'ce996ee388766d7471956f7e323701ae';
 
 switch ($action) {
+    case "deleteReview":
+        $reviewID = filter_input(INPUT_POST, 'reviewID', FILTER_VALIDATE_INT);
+        $movieID = filter_input(INPUT_POST, 'movieID');
+        //the movie view wants a tmdb movie array, not a movie object
+        $movie = TmdbAPI::getMovie($movieID);
+        ReviewDB::deleteReview($reviewID);
+        $ratingsReviewsUsers = MovieDB::getMovieRatingsAndReviews($movie['id']);
+        $userRating = false;
+        $userReview = false;
+
+        if ($_SESSION['loginUser'] !== 'defaultUser') {
+            if (!is_null(RatingDB::getUserRatingByTmdbID($user, $movieID))) {
+                $userRating = RatingDB::getUserRatingByTmdbID($user, $movieID);
+            }
+            if (!is_null(ReviewDB::getUserReviewByTmdbID($user, $movieID))) {
+                $userReview = ReviewDB::getUserReviewByTmdbID($user, $movieID);
+            }
+            $isFavorite = FavoriteDB::findFavorite($user->getUserID(), $movieID);
+            $favString = '';
+            if ($isFavorite) {
+                $favString = 'unfavorite';
+            } else {
+                $favString = 'favorite';
+            }
+        }
+        include './main/movie.php';
+        die();
+        break;
     case "unfavorite":
         $tmdbID = filter_input(INPUT_GET, 'movie');
         FavoriteDB::removeFavorite($user->getUserID(), $tmdbID);
@@ -503,7 +531,7 @@ switch ($action) {
         }
         $usernameError = Validation::validUsername($username, 'Username');
 
-        if (!UserDB::uniqueUsernameTest($username) === false) {
+        if (UserDB::uniqueUsernameTest($username) !== false) {
             $usernameError = 'Username already taken.';
         }
 
