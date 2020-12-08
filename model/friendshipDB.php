@@ -79,7 +79,7 @@ class FriendshipDB {
         } else {
             $pending = 'pending1';
         }
-        if (count(self::getRelationship($users)) !== 0) {
+        if (self::getRelationship($users) !== false) {
             try {
                 $db = Database::getDB();
                 $query = 'UPDATE userrelationships
