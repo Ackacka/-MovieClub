@@ -25,13 +25,13 @@ class Validation {
     public function validPassword($password, $label) {
         if (empty($password)) {
             return $label . ' must not be empty' . "\n";
-        } else if (!preg_match('/[A-Z]+/', $arg)) {
+        } else if (!preg_match('/[A-Z]+/', $password)) {
             return $label . ' must have a capital letter' . "\n";
-        } else if (!preg_match('/[a-z]+/', $arg)) {
+        } else if (!preg_match('/[a-z]+/', $password)) {
             return $label . ' must have a lower case letter' . "\n";
-        } else if (!preg_match('/[0-9]+/', $arg)) {
+        } else if (!preg_match('/[0-9]+/', $password)) {
             return $label . ' must include a number' . "\n";
-        } else if (strlen($arg) < 8) {
+        } else if (strlen($password) < 8) {
             return $label . ' must be at least 8 characters long' . "\n";
         } else {
             return $label = '';

@@ -3,7 +3,7 @@
         <h4>Logged in as <?php echo $user->getUsername(); ?></h4>
     <?php } ?>
     <p class="copyright">
-        &copy; <?php echo date("Y"); ?> tmdb test
+        &copy; <?php echo date("Y"); ?> Movie Club
     </p>
 </footer>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

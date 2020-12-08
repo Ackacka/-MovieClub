@@ -49,8 +49,13 @@ $makeSecret = 'ce996ee388766d7471956f7e323701ae';
 switch ($action) {
     case "recommender":
         $userFavs = FavoriteDB::getUserFavorites($user->getUserID());
-        $randFav = $userFavs[rand(0, count($userFavs) - 1)];
-        $recommendations = TmdbAPI::getRecommendations($randFav);
+        $randFav;
+        $recommendations;
+        if (!empty($userFavs)) {
+            $randFav = $userFavs[rand(0, count($userFavs) - 1)];
+            $recommendations = TmdbAPI::getRecommendations($randFav);
+        }
+        
         if (!isset($rating)) {
             $rating = 0;
         }
@@ -70,16 +75,19 @@ switch ($action) {
         //chooses a random popular movie to recommend. Hacked together I know!
         $movie = array();
         $i = 0;
-        do {
-            $movie = $recommendations[rand( 0, count($recommendations) - 1)];
-            $i++;
-        } while (in_array($movie['id'], $nonoIDs) && $i < 20 );
-        
-        if(in_array($movie['id'], $nonoIDs)){
+        if (!empty($recommendations)) {
+            do {
+                $movie = $recommendations[rand(0, count($recommendations) - 1)];
+                $i++;
+            } while (in_array($movie['id'], $nonoIDs) && $i < 20);
+        }
+
+
+        if (empty($movie) || in_array( $movie['id'], $nonoIDs)) {
             $movie = TmdbAPI::getRandomPopular();
         }
 
-         
+
         //let view know whether movie is the user's favorite
         $favString = '';
         $isFavorite = FavoriteDB::findFavorite($user->getUserID(), $movie['id']);
@@ -88,8 +96,8 @@ switch ($action) {
         } else {
             $favString = 'favorite';
         }
-       
-        
+
+
         include './account/recommender.php';
         die();
         break;
@@ -182,26 +190,26 @@ switch ($action) {
         $sameFavs = array();
         $randSameFav = false;
         $sameFavMovie = false;
-        if ($relationship !== false){
+        if ($relationship !== false) {
             $relationship = FriendshipDB::getRelationship($usersArray)['type'];
         }
         $profileUserRatings = false;
-        if($relationship === 'friends' || $user->getUsername() === $username){
+        if ($relationship === 'friends' || $user->getUsername() === $username) {
             $profileUserRatings = RatingDB::getUserRatingsAndReviews($profileUser);
         }
-        if($relationship === 'friends') {
+        if ($relationship === 'friends') {
             $userFavs = FavoriteDB::getUserFavorites($user->getUserID());
             $profileUserFavs = FavoriteDB::getUserFavorites($profileUser->getUserID());
-            foreach($userFavs as $fav) {
-                if(in_array($fav, $profileUserFavs)){
+            foreach ($userFavs as $fav) {
+                if (in_array($fav, $profileUserFavs)) {
                     array_push($sameFavs, $fav);
                 }
             }
             $randSameFav = $sameFavs[rand(0, count($sameFavs) - 1)];
-            
+
             $sameFavMovie = MovieDB::getMovie($randSameFav);
         }
-        
+
 
         include './main/profile.php';
         die();
@@ -336,8 +344,8 @@ switch ($action) {
         $relationships = FriendshipDB::getRelationships($user);
         $pendingUsers = array();
         $friendUsers = array();
-        
-        foreach ($relationships as $r){
+
+        foreach ($relationships as $r) {
             if ($r['type'] === 'friends') {
                 $friendUsers[] = $r['userID'];
             } else if (preg_match('/^pending(1|2)/', $r['type']) === 1)
@@ -362,10 +370,10 @@ switch ($action) {
     case "search":
         $search = filter_input(INPUT_POST, 'search');
         $searchResults = array();
-        if (!empty($search)){
+        if (!empty($search)) {
             $searchResults = TmdbAPI::getSearchResults($search);
         }
-        
+
         include './main/searchResults.php';
         die();
         break;
