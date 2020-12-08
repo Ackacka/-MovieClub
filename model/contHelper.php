@@ -35,6 +35,4 @@ class ContHelper {
         }
         return $top3Genres;
     }
-    
-
 }

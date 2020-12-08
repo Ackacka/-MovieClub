@@ -146,7 +146,7 @@ class FriendshipDB {
         return $userArray;
     }
     
-    public static function getFriends($user){
+    public static function getRelationships($user){
         $db = Database::getDB();
         $query = 'SELECT * FROM userrelationships
                 WHERE userFirstID = :user
@@ -155,17 +155,22 @@ class FriendshipDB {
         $statement->bindValue(':user', $user->getUserID());
         $statement->execute();
         $rows = $statement->fetchAll();
-        $friends = array();
+        $relationships = array();
         
         foreach ($rows as $row) {
             if ($user->getUserID() === $row['userFirstID']) {
-                array_push($friends, $row['userSecondID']);
+                
+                $relationship['userID'] = $row['userSecondID'];
+                $relationship['type'] = $row['type'];
+                $relationships[] = $relationship;
             } else {
-                array_push($friends, $row['userFirstID']);
+                $relationship['userID'] = $row['userFirstID'];
+                $relationship['type'] = $row['type'];
+                $relationships[] = $relationship;
             }
         }
        
-        return $friends;
+        return $relationships;
     }
 
 }

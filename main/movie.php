@@ -41,7 +41,11 @@
                             <div class="collapse" id="collapseTxtReview">
                                 <div class="form-group">
                                     <label for="txtReview">Your review</label>
-                                    <textarea class="form-control" id="txtReview" name="newReview" rows="3" maxlength="400"></textarea>
+                                    <!--if there is a user review, put it in the placeholder-->
+                                    <textarea class="form-control" id="txtReview"
+                                        name="newReview" rows="3" maxlength="400"
+                                        ><?php if ($_SESSION['loginUser'] !== 'defaultUser' && $userReview !== false) echo trim($userReview->getReview()); ?>
+                                    </textarea>
                                 </div>
                             </div>
 
@@ -125,7 +129,7 @@
                 <?php } else { ?>
                     <div class="col-8 m-1">
                         <div class="row">
-                            <p>No one has rated this movie.</p>
+                            <p>No one has reviewed this movie.</p>
                         </div>
                     </div>
                 <?php } ?>

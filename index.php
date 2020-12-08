@@ -333,7 +333,16 @@ switch ($action) {
     case "searchUsers":
         $search = filter_input(INPUT_POST, 'usernameSearch');
         $results = array();
-        $friends = FriendshipDB::getFriends($user);
+        $relationships = FriendshipDB::getRelationships($user);
+        $pendingUsers = array();
+        $friendUsers = array();
+        
+        foreach ($relationships as $r){
+            if ($r['type'] === 'friends') {
+                $friendUsers[] = $r['userID'];
+            } else if (preg_match('/^pending(1|2)/', $r['type']) === 1)
+                $pendingUsers[] = $r['userID'];
+        }
         if ($search !== "")
             $results = UserDB::search($search);
         foreach ($results as $i => $result) {

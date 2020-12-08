@@ -42,8 +42,10 @@
                         <form method="post" action="index.php">
                             <input type="hidden" name="action" value="friendInvite">
                             <input type="hidden" name="userIDto" value="<?php echo $result->getUserID(); ?>">
-                            <?php if (in_array($result->getUserID(), $friends)) { ?>
+                            <?php if (in_array($result->getUserID(), $friendUsers)) { ?>
                                 <button type="submit" class="btn btn-primary btn-sm align-items-center float-right" disabled>friends</button>
+                            <?php } else if (in_array($result->getUserID(), $pendingUsers)) { ?>
+                                <button type="submit" class="btn btn-primary btn-sm align-items-center float-right" disabled>Request pending</button>
                             <?php } else { ?>
                                 <button type="submit" class="btn btn-primary btn-sm align-items-center float-right">Add</button>
                             <?php } ?>

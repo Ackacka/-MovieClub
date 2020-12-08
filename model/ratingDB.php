@@ -123,15 +123,17 @@ class RatingDB {
 
         return $ratings;
     }
-    
+
     public static function getUserRatingsAndReviews($user) {
         $db = Database::getDB();
 
-        $query = 'SELECT r.ratingID, r.userID, r.tmdbID, r.ratingDate, r.rating,'
-                . 'm.title, m.overview, m.poster, re.reviewID, re.reviewDate, re.review '
-                . 'FROM ratings r INNER JOIN movies m ON r.tmdbID = m.tmdbID '
-                . 'LEFT JOIN reviews re ON r.tmdbID = re.tmdbID '
-                . 'WHERE r.userID = :userID';
+        $query = 'SELECT r.ratingID, r.userID, r.tmdbID, r.ratingDate, r.rating,
+            m.title, m.overview, m.poster, re.reviewID, re.userID,
+            re.reviewDate, re.review
+            FROM ratings r 
+            JOIN movies m ON r.tmdbID = m.tmdbID
+            RIGHT JOIN reviews re ON r.tmdbID = re.tmdbID and r.userID = re.userID
+            WHERE re.userID = :userID';
         $statement = $db->prepare($query);
         $statement->bindValue(":userID", $user->getUserID());
         $statement->execute();
@@ -144,13 +146,13 @@ class RatingDB {
             $rating->setRatingID($row['ratingID']);
             $rating->setRatingDate($row['ratingDate']);
             $review = false;
-            
+
             if (!is_null($row['reviewID'])) {
                 $review = new Review($user->getUserID(), $row['tmdbID'], $row['review'], $movie);
                 $review->setReviewID($row['reviewID']);
                 $review->setReviewDate($row['reviewDate']);
             }
-            
+
             $ratingAndReview['rating'] = $rating;
             $ratingAndReview['review'] = $review;
             $ratingsAndReviews[] = $ratingAndReview;

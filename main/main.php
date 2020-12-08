@@ -28,11 +28,6 @@
                 </div>
             <?php } ?>   
         <?php } ?>
-                
-                    
-    
-    
-    <?php // var_dump($movies); ?>
 </div>
 
 <?php include 'view/footer.php'; ?>

@@ -1,28 +1,29 @@
 <?php
 
-class Validation {     
-    public function validLength($arg, $label, $max) {
-        if(strlen($arg) > $max) {
-            return $label . ' must be ' . $max . ' characters or less' . "\n";
+class Validation {
+    
+    public function validLength($string, $label, $length){
+        if(strlen($string) > $length){
+            return $label . " must be " . $length . "characters or less.";
         } else {
-            return "";
+            return $label = '';
         }
     }
     
-    public function validUsername($arg, $label) {
-        if ($arg === null || $arg === "") {
+    public function validUsername($username, $label) {
+        if (empty($username)) {
             return $label . ' must not be empty' . "\n";
-        } else if (!(strlen($arg) >= 4 && strlen($arg) <= 30)) {
+        } else if (!(strlen($username) >= 4 && strlen($username) <= 30)) {
             return $label . ' must be between 4 and 30 characters long' . "\n";
-        } else if (!preg_match('/^\s*[a-z,A-Z]/', trim($arg))) {
+        } else if (!preg_match('/^\s*[a-z,A-Z]/', trim($username))) {
             return $label . ' must start with a letter' . "\n";
         } else {
             return $label = '';
         }
     }
 
-    public function validPassword($arg, $label) {
-        if ($arg === null || $arg === "") {
+    public function validPassword($password, $label) {
+        if (empty($password)) {
             return $label . ' must not be empty' . "\n";
         } else if (!preg_match('/[A-Z]+/', $arg)) {
             return $label . ' must have a capital letter' . "\n";
@@ -37,11 +38,9 @@ class Validation {
         }
     }
 
-    public function validEmail($arg, $label) {
-        if ($arg === null || $arg === "") {
+    public function validEmail($email, $label) {
+        if (empty($email)) {
             return $label . ' must not be empty' . "\n";
-//        } else if (!filter_var($arg, FILTER_VALIDATE_EMAIL)) {
-//            return $label = "The email ".$arg." is not a valid email.";
         } else {
             return $label = "";
         }

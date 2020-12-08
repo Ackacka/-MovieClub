@@ -19,7 +19,6 @@ class Movie {
     function setGenres($genres): void {
         $this->genres = $genres;
     }
-
         
     function getTmdbID() {
         return $this->tmdbID;
